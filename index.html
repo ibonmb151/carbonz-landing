@@ -31,31 +31,38 @@
             background: var(--black);
             color: var(--white);
             -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
         }
 
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
 
         /* ============================================
-           NAV
+           NAV — responsive con menú hamburguesa
            ============================================ */
         nav {
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 1000;
-            height: 48px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(0,0,0,0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        nav.scrolled {
+            background: rgba(0,0,0,0.92);
+            box-shadow: 0 1px 0 rgba(255,255,255,0.05);
         }
 
         nav .inner {
             width: 100%;
             max-width: 1400px;
-            padding: 0 40px;
+            padding: 0 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -66,6 +73,7 @@
             font-weight: 700;
             letter-spacing: 0.2em;
             text-transform: uppercase;
+            z-index: 1001;
         }
 
         .nav-links {
@@ -80,28 +88,95 @@
             color: var(--gray-500);
             letter-spacing: 0.05em;
             transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
         }
 
         .nav-links a:hover { color: var(--white); }
+        .nav-links a:hover::after { width: 100%; }
 
         .nav-buy {
             font-size: 0.7rem;
             font-weight: 600;
             color: var(--black);
             background: var(--white);
-            padding: 6px 18px;
+            padding: 8px 20px;
             border-radius: 980px;
+            transition: all 0.2s;
         }
 
-        .nav-buy:hover { background: var(--gray-800); }
+        .nav-buy:hover { background: var(--gray-200); transform: scale(1.02); }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 4px;
+        }
+
+        .hamburger span {
+            width: 20px;
+            height: 1.5px;
+            background: var(--white);
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-menu a {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            transition: color 0.2s;
+        }
+
+        .mobile-menu a:hover { color: var(--white); }
 
         @media (max-width: 768px) {
-            .nav-links { display: none; }
-            nav .inner { padding: 0 20px; }
+            .nav-links, .nav-buy { display: none; }
+            .hamburger { display: flex; }
+            .mobile-menu { display: flex; }
         }
 
         /* ============================================
-           HERO — texto + imagen superpuestos
+           HERO
            ============================================ */
         .hero {
             position: relative;
@@ -124,6 +199,7 @@
             height: 100%;
             object-fit: cover;
             object-position: center 30%;
+            will-change: transform;
         }
 
         .hero-gradient {
@@ -132,13 +208,13 @@
             z-index: 2;
             background:
                 linear-gradient(to top, var(--black) 0%, transparent 50%),
-                linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 60%);
+                linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 60%);
         }
 
         .hero-content {
             position: relative;
             z-index: 10;
-            padding: 0 40px 10vh;
+            padding: 0 24px 12vh;
             max-width: 700px;
         }
 
@@ -152,10 +228,10 @@
         }
 
         .hero-content h1 {
-            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-size: clamp(3rem, 10vw, 7rem);
             font-weight: 900;
             letter-spacing: -0.04em;
-            line-height: 0.9;
+            line-height: 0.88;
             margin-bottom: 24px;
         }
 
@@ -163,16 +239,16 @@
             font-weight: 300;
             color: var(--gray-400);
             display: block;
-            font-size: 0.5em;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
+            font-size: 0.45em;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
         }
 
         .hero-content .desc {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--gray-400);
             line-height: 1.7;
-            max-width: 420px;
+            max-width: 380px;
             margin-bottom: 40px;
         }
 
@@ -187,6 +263,12 @@
             font-size: 2.2rem;
             font-weight: 800;
             letter-spacing: -0.02em;
+        }
+
+        .hero-content .old-price {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            text-decoration: line-through;
         }
 
         .hero-content .shipping {
@@ -204,10 +286,10 @@
             background: var(--white);
             padding: 14px 32px;
             border-radius: 980px;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
-        .btn-hero:hover { background: var(--gray-800); color: var(--white); }
+        .btn-hero:hover { background: var(--gray-200); transform: scale(1.02); }
 
         .btn-hero svg {
             width: 12px;
@@ -220,50 +302,68 @@
         .scroll-indicator {
             position: absolute;
             bottom: 32px;
-            right: 40px;
+            right: 24px;
             z-index: 10;
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--gray-600);
-            letter-spacing: 0.15em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
             writing-mode: vertical-rl;
+            animation: fadeInUp 1s ease 1.5s both;
+        }
+
+        .scroll-indicator .line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--gray-600), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
-            .hero-content { padding: 0 20px 12vh; }
+            .hero-content { padding: 0 20px 14vh; }
             .scroll-indicator { display: none; }
         }
 
         /* ============================================
-           MARQUEE — texto infinito
+           MARQUEE
            ============================================ */
         .marquee-section {
             overflow: hidden;
-            padding: 16px 0;
+            padding: 14px 0;
             background: var(--green);
         }
 
         .marquee-track {
             display: flex;
             width: max-content;
-            animation: marquee 12s linear infinite;
+            animation: marquee 10s linear infinite;
         }
 
         .marquee-track span {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             white-space: nowrap;
-            padding: 0 32px;
+            padding: 0 28px;
             color: var(--black);
         }
 
-        .marquee-track span.accent {
-            color: rgba(0, 0, 0, 0.3);
+        .marquee-track span.dot {
+            color: rgba(0,0,0,0.25);
         }
 
         @keyframes marquee {
@@ -272,14 +372,16 @@
         }
 
         /* ============================================
-           SPLIT ASYMMETRIC — offset
+           SPLIT ASYMMETRIC
            ============================================ */
         .split-asym {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 55% 45%;
             min-height: 100vh;
             position: relative;
         }
+
+        .split-asym.reverse { grid-template-columns: 45% 55%; }
 
         .split-asym .img-side {
             position: relative;
@@ -296,88 +398,79 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 80px 60px 80px 80px;
-            position: relative;
-        }
-
-        .split-asym.reverse {
-            direction: rtl;
-        }
-
-        .split-asym.reverse > * {
-            direction: ltr;
+            padding: 80px 48px 80px 64px;
         }
 
         .split-asym.reverse .text-side {
-            padding: 80px 80px 80px 60px;
+            padding: 80px 64px 80px 48px;
         }
 
-        .split-asym .text-side .label {
+        .split-asym .label {
             font-size: 0.6rem;
             font-weight: 600;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--gray-600);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
-        .split-asym .text-side h3 {
-            font-size: clamp(2rem, 4vw, 3.2rem);
+        .split-asym h3 {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
             font-weight: 800;
             letter-spacing: -0.03em;
             line-height: 1.05;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
-        .split-asym .text-side h3 .thin {
+        .split-asym h3 .thin {
             font-weight: 300;
             color: var(--gray-400);
         }
 
-        .split-asym .text-side p {
-            font-size: 1rem;
+        .split-asym .desc {
+            font-size: 0.95rem;
             color: var(--gray-500);
             line-height: 1.8;
-            max-width: 400px;
+            max-width: 380px;
         }
 
-        .split-asym .text-side .stat-block {
-            margin-top: 48px;
+        .split-asym .stats {
+            margin-top: 40px;
             display: flex;
-            gap: 48px;
+            gap: 40px;
         }
 
-        .split-asym .stat-block .stat-val {
-            font-size: 2.5rem;
+        .split-asym .stat-val {
+            font-size: 2.2rem;
             font-weight: 800;
             letter-spacing: -0.03em;
         }
 
-        .split-asym .stat-block .stat-label {
-            font-size: 0.7rem;
+        .split-asym .stat-label {
+            font-size: 0.65rem;
             color: var(--gray-600);
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             margin-top: 4px;
         }
 
         @media (max-width: 900px) {
-            .split-asym {
+            .split-asym, .split-asym.reverse {
                 grid-template-columns: 1fr;
                 min-height: auto;
             }
-            .split-asym .img-side { height: 50vh; }
-            .split-asym .text-side { padding: 60px 24px; }
-            .split-asym.reverse { direction: ltr; }
+            .split-asym .img-side { height: 50vh; min-height: 300px; }
+            .split-asym .text-side,
+            .split-asym.reverse .text-side { padding: 48px 20px; }
         }
 
         /* ============================================
-           DIAGONAL — sección con ángulo
+           DIAGONAL
            ============================================ */
         .diagonal-section {
             position: relative;
             overflow: hidden;
-            min-height: 80vh;
+            min-height: 70vh;
             display: flex;
             align-items: center;
         }
@@ -385,7 +478,6 @@
         .diagonal-bg {
             position: absolute;
             inset: -10%;
-            z-index: 1;
         }
 
         .diagonal-bg img {
@@ -397,15 +489,14 @@
         .diagonal-overlay {
             position: absolute;
             inset: 0;
-            z-index: 2;
-            background: linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(135deg, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.3) 100%);
         }
 
         .diagonal-content {
             position: relative;
             z-index: 10;
-            padding: 80px 40px 80px 8vw;
-            max-width: 600px;
+            padding: 80px 24px 80px 8vw;
+            max-width: 550px;
         }
 
         .diagonal-content .label {
@@ -414,51 +505,51 @@
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--green);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .diagonal-content h3 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-size: clamp(2rem, 5vw, 3.2rem);
             font-weight: 800;
             letter-spacing: -0.03em;
             line-height: 1;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .diagonal-content p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--gray-400);
             line-height: 1.8;
         }
 
         @media (max-width: 768px) {
-            .diagonal-content { padding: 60px 24px; }
+            .diagonal-content { padding: 48px 20px; }
         }
 
         /* ============================================
-           HORIZONTAL SCROLL SECTION
+           HORIZONTAL SCROLL
            ============================================ */
-        .horizontal-section {
+        .hscroll-section {
             overflow: hidden;
-            padding: 120px 0 120px 40px;
+            padding: 120px 0 120px 24px;
         }
 
-        .horizontal-section .section-title {
+        .hscroll-section .section-title {
             font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 800;
             letter-spacing: -0.03em;
-            margin-bottom: 60px;
-            padding-right: 40px;
+            margin-bottom: 48px;
+            padding-right: 24px;
         }
 
         .hscroll-track {
             display: flex;
-            gap: 24px;
+            gap: 16px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 40px;
-            padding-right: 40px;
+            padding-bottom: 32px;
+            padding-right: 24px;
             scrollbar-width: none;
         }
 
@@ -466,15 +557,19 @@
 
         .hscroll-card {
             flex: 0 0 auto;
-            width: 340px;
+            width: 300px;
             scroll-snap-align: start;
             background: var(--gray-950);
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
+            border: 1px solid var(--gray-900);
+            transition: border-color 0.3s;
         }
 
+        .hscroll-card:hover { border-color: var(--gray-800); }
+
         .hscroll-card .card-img {
-            height: 260px;
+            height: 220px;
             overflow: hidden;
         }
 
@@ -484,77 +579,75 @@
             object-fit: cover;
         }
 
-        .hscroll-card .card-body {
-            padding: 28px;
-        }
+        .hscroll-card .card-body { padding: 24px; }
 
         .hscroll-card .card-num {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 600;
             color: var(--gray-600);
             letter-spacing: 0.15em;
-            margin-bottom: 12px;
-        }
-
-        .hscroll-card h4 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
             margin-bottom: 10px;
         }
 
+        .hscroll-card h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
         .hscroll-card p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--gray-500);
             line-height: 1.6;
         }
 
         @media (max-width: 768px) {
-            .horizontal-section { padding: 80px 0 80px 20px; }
-            .hscroll-card { width: 280px; }
+            .hscroll-section { padding: 80px 0 80px 16px; }
+            .hscroll-card { width: 260px; }
         }
 
         /* ============================================
-           SPECS — split layout
+           SPECS
            ============================================ */
         .specs-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            min-height: 80vh;
+            min-height: 70vh;
         }
 
         .specs-left {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 80px 60px 80px 8vw;
+            padding: 80px 48px 80px 8vw;
         }
 
         .specs-left h2 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-size: clamp(2rem, 4vw, 3.5rem);
             font-weight: 800;
             letter-spacing: -0.03em;
             line-height: 1;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .specs-left p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--gray-500);
             line-height: 1.7;
-            max-width: 400px;
+            max-width: 350px;
         }
 
         .specs-right {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 80px 8vw 80px 60px;
+            padding: 80px 8vw 80px 48px;
             border-left: 1px solid var(--gray-900);
         }
 
         .spec-line {
-            padding: 20px 0;
+            padding: 18px 0;
             border-bottom: 1px solid var(--gray-900);
             display: flex;
             justify-content: space-between;
@@ -563,25 +656,17 @@
 
         .spec-line:last-child { border-bottom: none; }
 
-        .spec-line .s-label {
-            font-size: 0.85rem;
-            color: var(--gray-600);
-        }
-
-        .spec-line .s-value {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--white);
-        }
+        .spec-line .s-label { font-size: 0.85rem; color: var(--gray-600); }
+        .spec-line .s-value { font-size: 0.85rem; font-weight: 500; }
 
         @media (max-width: 900px) {
             .specs-section { grid-template-columns: 1fr; }
-            .specs-left, .specs-right { padding: 60px 24px; }
+            .specs-left, .specs-right { padding: 48px 20px; }
             .specs-right { border-left: none; border-top: 1px solid var(--gray-900); }
         }
 
         /* ============================================
-           CTA FINAL — asimétrico
+           CTA FINAL
            ============================================ */
         .cta-final {
             position: relative;
@@ -594,7 +679,6 @@
         .cta-bg {
             position: absolute;
             inset: 0;
-            z-index: 1;
         }
 
         .cta-bg img {
@@ -608,67 +692,77 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to right, var(--black) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%);
-            z-index: 2;
+            background: linear-gradient(to right, var(--black) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.3) 100%);
         }
 
         .cta-content {
             position: relative;
             z-index: 10;
-            padding: 0 40px 0 8vw;
-            max-width: 650px;
+            padding: 0 24px 0 8vw;
+            max-width: 600px;
         }
 
         .cta-content h2 {
-            font-size: clamp(3rem, 7vw, 6rem);
+            font-size: clamp(2.5rem, 7vw, 5.5rem);
             font-weight: 900;
             letter-spacing: -0.04em;
             line-height: 0.9;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .cta-content h2 .thin {
             font-weight: 300;
             color: var(--gray-400);
             display: block;
-            font-size: 0.5em;
+            font-size: 0.45em;
             letter-spacing: 0.02em;
         }
 
         .cta-price-row {
             display: flex;
             align-items: baseline;
-            gap: 16px;
-            margin-bottom: 16px;
+            gap: 14px;
+            margin-bottom: 12px;
         }
 
         .cta-price-row .big {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 800;
             letter-spacing: -0.02em;
         }
 
-        .cta-price-row .note {
-            font-size: 0.85rem;
-            color: var(--gray-500);
+        .cta-price-row .old {
+            font-size: 1.2rem;
+            color: var(--gray-600);
+            text-decoration: line-through;
         }
 
-        .cta-content .cta-shipping {
+        .cta-price-row .badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            background: var(--green);
+            color: var(--black);
+            padding: 4px 10px;
+            border-radius: 980px;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-content .cta-note {
             font-size: 0.8rem;
             color: var(--gray-600);
-            margin-bottom: 40px;
+            margin-bottom: 36px;
         }
 
         .cta-buttons {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .btn-cta {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            padding: 16px 36px;
+            padding: 14px 32px;
             border-radius: 980px;
             border: none;
             cursor: pointer;
@@ -678,12 +772,8 @@
             transition: all 0.2s;
         }
 
-        .btn-cta.primary {
-            background: var(--white);
-            color: var(--black);
-        }
-
-        .btn-cta.primary:hover { background: var(--gray-800); color: var(--white); }
+        .btn-cta.primary { background: var(--white); color: var(--black); }
+        .btn-cta.primary:hover { background: var(--gray-200); transform: scale(1.02); }
 
         .btn-cta.secondary {
             background: transparent;
@@ -702,7 +792,7 @@
            ============================================ */
         footer {
             border-top: 1px solid var(--gray-900);
-            padding: 32px 40px;
+            padding: 28px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -711,18 +801,15 @@
         }
 
         footer .copy {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--gray-600);
             letter-spacing: 0.05em;
         }
 
-        footer .links {
-            display: flex;
-            gap: 24px;
-        }
+        footer .links { display: flex; gap: 20px; }
 
         footer .links a {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--gray-600);
             transition: color 0.2s;
         }
@@ -730,23 +817,20 @@
         footer .links a:hover { color: var(--white); }
 
         @media (max-width: 768px) {
-            footer { padding: 24px 20px; justify-content: center; }
+            footer { justify-content: center; text-align: center; }
         }
 
         /* ============================================
-           REVEAL
+           REVEAL ANIMATIONS
            ============================================ */
         .r {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(50px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .r.vis {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .r.vis { opacity: 1; transform: translateY(0); }
 
         .r.d1 { transition-delay: 0.1s; }
         .r.d2 { transition-delay: 0.2s; }
@@ -755,45 +839,61 @@
 
         .r-left {
             opacity: 0;
-            transform: translateX(-40px);
-            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .r-left.vis {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .r-right {
-            opacity: 0;
-            transform: translateX(40px);
-            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .r-right.vis {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .r-scale {
-            opacity: 0;
-            transform: scale(0.95);
+            transform: translateX(-60px);
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
                         transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .r-scale.vis {
-            opacity: 1;
-            transform: scale(1);
+        .r-left.vis { opacity: 1; transform: translateX(0); }
+
+        .r-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .r-right.vis { opacity: 1; transform: translateX(0); }
+
+        .r-scale {
+            opacity: 0;
+            transform: scale(1.08);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .r-scale.vis { opacity: 1; transform: scale(1); }
+
+        .r-fade {
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .r-fade.vis { opacity: 1; }
+
+        /* ============================================
+           PROGRESS BAR (scroll indicator)
+           ============================================ */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--green);
+            z-index: 10000;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.1s linear;
         }
     </style>
 </head>
 <body>
 
+    <!-- PROGRESS BAR -->
+    <div class="progress-bar" id="progressBar"></div>
+
     <!-- NAV -->
-    <nav>
+    <nav id="mainNav">
         <div class="inner">
             <div class="logo">CarbonZ</div>
             <ul class="nav-links">
@@ -802,15 +902,28 @@
                 <li><a href="#specs">Especificaciones</a></li>
             </ul>
             <a href="#comprar" class="nav-buy">Comprar</a>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     </nav>
 
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#producto" class="mobile-link">Producto</a>
+        <a href="#detalles" class="mobile-link">Detalles</a>
+        <a href="#specs" class="mobile-link">Especificaciones</a>
+        <a href="#comprar" class="mobile-link" style="color: var(--green);">Comprar</a>
+    </div>
+
     <!-- ==========================================
-         HERO — imagen full, texto superpuesto abajo-izquierda
+         HERO
          ========================================== -->
     <section class="hero">
         <div class="hero-bg">
-            <img src="hero-frontal.png" alt="Cúpula carbono forjado Z900">
+            <img src="hero-frontal.png" alt="Cúpula carbono forjado Z900" id="heroImg">
         </div>
         <div class="hero-gradient"></div>
         <div class="hero-content">
@@ -821,7 +934,8 @@
             </h1>
             <p class="desc r d2">Ligereza. Resistencia. Sin concesiones. Cada pieza es única, como tu moto.</p>
             <div class="price-row r d3">
-                <span class="price">189€</span>
+                <span class="price">151€</span>
+                <span class="old-price">189€</span>
                 <span class="shipping">Envío incluido</span>
             </div>
             <a href="#comprar" class="btn-hero r d4">
@@ -829,44 +943,32 @@
                 <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
         </div>
-        <div class="scroll-indicator">Scroll</div>
+        <div class="scroll-indicator">
+            <div class="line"></div>
+            Scroll
+        </div>
     </section>
 
-    <!-- ==========================================
-         MARQUEE
-         ========================================== -->
+    <!-- MARQUEE -->
     <div class="marquee-section">
         <div class="marquee-track">
-            <span>20% OFF</span>
-            <span class="accent">·</span>
-            <span>SOLO ESTE MES</span>
-            <span class="accent">·</span>
-            <span>ENVÍO GRATIS</span>
-            <span class="accent">·</span>
-            <span>20% OFF</span>
-            <span class="accent">·</span>
-            <span>SOLO ESTE MES</span>
-            <span class="accent">·</span>
-            <span>ENVÍO GRATIS</span>
-            <span class="accent">·</span>
-            <!-- duplicado para loop infinito -->
-            <span>20% OFF</span>
-            <span class="accent">·</span>
-            <span>SOLO ESTE MES</span>
-            <span class="accent">·</span>
-            <span>ENVÍO GRATIS</span>
-            <span class="accent">·</span>
-            <span>20% OFF</span>
-            <span class="accent">·</span>
-            <span>SOLO ESTE MES</span>
-            <span class="accent">·</span>
-            <span>ENVÍO GRATIS</span>
-            <span class="accent">·</span>
+            <span>20% OFF</span><span class="dot">·</span>
+            <span>SOLO ESTE MES</span><span class="dot">·</span>
+            <span>ENVÍO GRATIS</span><span class="dot">·</span>
+            <span>20% OFF</span><span class="dot">·</span>
+            <span>SOLO ESTE MES</span><span class="dot">·</span>
+            <span>ENVÍO GRATIS</span><span class="dot">·</span>
+            <span>20% OFF</span><span class="dot">·</span>
+            <span>SOLO ESTE MES</span><span class="dot">·</span>
+            <span>ENVÍO GRATIS</span><span class="dot">·</span>
+            <span>20% OFF</span><span class="dot">·</span>
+            <span>SOLO ESTE MES</span><span class="dot">·</span>
+            <span>ENVÍO GRATIS</span><span class="dot">·</span>
         </div>
     </div>
 
     <!-- ==========================================
-         SPLIT 1 — imagen izquierda + texto derecha (offset)
+         SPLIT 1
          ========================================== -->
     <section class="split-asym" id="producto">
         <div class="img-side r-scale">
@@ -874,12 +976,9 @@
         </div>
         <div class="text-side">
             <p class="label r">Diseño</p>
-            <h3 class="r d1">
-                Forma que <span class="thin">protege.</span><br>
-                Textura que <span class="thin">enamora.</span>
-            </h3>
-            <p class="r d2">Moldeada a partir del original de Kawasaki. Cada curva, cada ángulo, cada orificio de fijación está calculado para un encaje perfecto.</p>
-            <div class="stat-block r d3">
+            <h3 class="r d1">Forma que <span class="thin">protege.</span><br>Textura que <span class="thin">enamora.</span></h3>
+            <p class="desc r d2">Moldeada a partir del original de Kawasaki. Cada curva está calculada para un encaje perfecto.</p>
+            <div class="stats r d3">
                 <div>
                     <div class="stat-val">-60%</div>
                     <div class="stat-label">Peso</div>
@@ -893,35 +992,29 @@
     </section>
 
     <!-- ==========================================
-         DIAGONAL — imagen con overlay angular
+         DIAGONAL
          ========================================== -->
     <section class="diagonal-section">
         <div class="diagonal-bg r-scale">
-            <img src="galeria-multiangulo.png" alt="Múltiples ángulos de la cúpula">
+            <img src="galeria-multiangulo.png" alt="Múltiples ángulos">
         </div>
         <div class="diagonal-overlay"></div>
         <div class="diagonal-content">
             <p class="label r">Proceso</p>
             <h3 class="r d1">Moldeada en<br>autoclave.</h3>
-            <p class="r d2">Alta presión, alta temperatura, vacío absoluto. El mismo proceso que en componentes de competición. Sin burbujas. Sin defectos. Solo carbono puro.</p>
+            <p class="r d2">Alta presión, alta temperatura, vacío absoluto. El mismo proceso que en competición. Sin burbujas. Sin defectos.</p>
         </div>
     </section>
 
     <!-- ==========================================
-         SPLIT 2 — texto izquierda + imagen derecha (reverse)
+         SPLIT 2 (reverse)
          ========================================== -->
     <section class="split-asym reverse">
-        <div class="img-side r-scale">
-            <img src="hero-frontal.png" alt="Cúpula carbono vista frontal">
-        </div>
         <div class="text-side">
             <p class="label r">Instalación</p>
-            <h3 class="r d1">
-                5 minutos.<br>
-                <span class="thin">Sin herramientas especiales.</span>
-            </h3>
-            <p class="r d2">Encaje directo con los tornillos de fábrica. Abre la caja, coloca la cúpula, aprieta. No necesitas adaptadores ni taladros.</p>
-            <div class="stat-block r d3">
+            <h3 class="r d1">5 minutos.<br><span class="thin">Sin herramientas especiales.</span></h3>
+            <p class="desc r d2">Encaje directo con tornillos de fábrica. Abre, coloca, aprieta. Sin adaptadores, sin taladros.</p>
+            <div class="stats r d3">
                 <div>
                     <div class="stat-val">5 min</div>
                     <div class="stat-label">Instalación</div>
@@ -932,59 +1025,54 @@
                 </div>
             </div>
         </div>
+        <div class="img-side r-scale">
+            <img src="hero-frontal.png" alt="Cúpula carbono frontal">
+        </div>
     </section>
 
     <!-- ==========================================
-         HORIZONTAL SCROLL — features
+         HORIZONTAL SCROLL
          ========================================== -->
-    <section class="horizontal-section" id="detalles">
+    <section class="hscroll-section" id="detalles">
         <h2 class="section-title r">Por qué forjado.</h2>
         <div class="hscroll-track">
             <div class="hscroll-card">
-                <div class="card-img">
-                    <img src="hero-frontal.png" alt="Carbono real">
-                </div>
+                <div class="card-img"><img src="hero-frontal.png" alt="Carbono real"></div>
                 <div class="card-body">
                     <p class="card-num">01</p>
                     <h4>Carbono real</h4>
-                    <p>No es acrílico. No es vinilo. Es fibra de carbono 100% real, con el patrón irregular que solo el forjado puede crear.</p>
+                    <p>No es acrílico. Es fibra de carbono 100% real con patrón irregular único.</p>
                 </div>
             </div>
             <div class="hscroll-card">
-                <div class="card-img">
-                    <img src="lateral.png" alt="Ultraligera">
-                </div>
+                <div class="card-img"><img src="lateral.png" alt="Ultraligera"></div>
                 <div class="card-body">
                     <p class="card-num">02</p>
                     <h4>Ultraligera</h4>
-                    <p>Reduce el peso frontal de tu Z900. Menos masa en alto mejora la manejabilidad y la respuesta en curva.</p>
+                    <p>Menos peso frontal = mejor manejabilidad y respuesta en curva.</p>
                 </div>
             </div>
             <div class="hscroll-card">
-                <div class="card-img">
-                    <img src="galeria-multiangulo.png" alt="Protección UV">
-                </div>
+                <div class="card-img"><img src="galeria-multiangulo.png" alt="Protección UV"></div>
                 <div class="card-body">
                     <p class="card-num">03</p>
                     <h4>Protección UV</h4>
-                    <p>Capa transparente anti-ultravioleta integrada. El carbono no amarillea. Años de brillo garantizado.</p>
+                    <p>Capa anti-UV integrada. No amarillea. Años de brillo.</p>
                 </div>
             </div>
             <div class="hscroll-card">
-                <div class="card-img">
-                    <img src="hero-frontal.png" alt="Hecha a mano">
-                </div>
+                <div class="card-img"><img src="hero-frontal.png" alt="Hecha a mano"></div>
                 <div class="card-body">
                     <p class="card-num">04</p>
                     <h4>Hecha a mano</h4>
-                    <p>Cada pieza pasa por manos expertas. Laminado, corte, pulido, barnizado. No es una pieza en serie más.</p>
+                    <p>Laminado, corte, pulido, barnizado. Cada pieza es una obra de arte.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ==========================================
-         SPECS — split
+         SPECS
          ========================================== -->
     <section class="specs-section" id="specs">
         <div class="specs-left">
@@ -993,34 +1081,13 @@
         </div>
         <div class="specs-right">
             <div class="r d2">
-                <div class="spec-line">
-                    <span class="s-label">Material</span>
-                    <span class="s-value">Carbono forjado 100%</span>
-                </div>
-                <div class="spec-line">
-                    <span class="s-label">Proceso</span>
-                    <span class="s-value">Autoclave</span>
-                </div>
-                <div class="spec-line">
-                    <span class="s-label">Acabado</span>
-                    <span class="s-value">Glossy + UV400</span>
-                </div>
-                <div class="spec-line">
-                    <span class="s-label">Peso</span>
-                    <span class="s-value">~320 g</span>
-                </div>
-                <div class="spec-line">
-                    <span class="s-label">Compatibilidad</span>
-                    <span class="s-value">Z900 2025 — 2026</span>
-                </div>
-                <div class="spec-line">
-                    <span class="s-label">Montaje</span>
-                    <span class="s-value">Bolt-on OEM</span>
-                </div>
-                <div class="spec-line">
-                    <span class="s-label">Envío</span>
-                    <span class="s-value">Gratis, 3-5 días</span>
-                </div>
+                <div class="spec-line"><span class="s-label">Material</span><span class="s-value">Carbono forjado 100%</span></div>
+                <div class="spec-line"><span class="s-label">Proceso</span><span class="s-value">Autoclave</span></div>
+                <div class="spec-line"><span class="s-label">Acabado</span><span class="s-value">Glossy + UV400</span></div>
+                <div class="spec-line"><span class="s-label">Peso</span><span class="s-value">~320 g</span></div>
+                <div class="spec-line"><span class="s-label">Compatibilidad</span><span class="s-value">Z900 2025 — 2026</span></div>
+                <div class="spec-line"><span class="s-label">Montaje</span><span class="s-value">Bolt-on OEM</span></div>
+                <div class="spec-line"><span class="s-label">Envío</span><span class="s-value">Gratis, 3-5 días</span></div>
             </div>
         </div>
     </section>
@@ -1033,15 +1100,13 @@
             <img src="lateral.png" alt="Cúpula carbono">
         </div>
         <div class="cta-content">
-            <h2 class="r">
-                ¿Lista<br>
-                <span class="thin">para volar?</span>
-            </h2>
+            <h2 class="r">¿Lista<br><span class="thin">para volar?</span></h2>
             <div class="cta-price-row r d1">
-                <span class="big">189€</span>
-                <span class="note">Envío incluido</span>
+                <span class="big">151€</span>
+                <span class="old">189€</span>
+                <span class="badge">-20%</span>
             </div>
-            <p class="cta-shipping r d2">Pago seguro con Stripe · Devolución 14 días</p>
+            <p class="cta-note r d2">Envío gratis · Pago seguro con Stripe · Devolución 14 días</p>
             <div class="cta-buttons r d3">
                 <button class="btn-cta primary">
                     Añadir al carrito
@@ -1064,32 +1129,78 @@
     </footer>
 
     <script>
-        // Reveal on scroll
+        // Progress bar
+        const progressBar = document.getElementById('progressBar');
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = scrollTop / scrollHeight;
+            progressBar.style.transform = `scaleX(${progress})`;
+        }, { passive: true });
+
+        // Nav scroll effect
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        // Parallax hero
+        const heroImg = document.getElementById('heroImg');
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY;
+            if (y < window.innerHeight) {
+                heroImg.style.transform = `scale(1.08) translateY(${y * 0.2}px)`;
+            }
+        }, { passive: true });
+
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Scroll reveal
         const obs = new IntersectionObserver((entries) => {
             entries.forEach(e => {
-                if (e.isIntersecting) e.target.classList.add('vis');
+                if (e.isIntersecting) {
+                    e.target.classList.add('vis');
+                    obs.unobserve(e.target);
+                }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
-        document.querySelectorAll('.r, .r-left, .r-right, .r-scale').forEach(el => obs.observe(el));
+        document.querySelectorAll('.r, .r-left, .r-right, .r-scale, .r-fade').forEach(el => obs.observe(el));
 
         // Smooth anchor
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
                 e.preventDefault();
                 const t = document.querySelector(a.getAttribute('href'));
-                if (t) t.scrollIntoView({ behavior: 'smooth' });
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
 
-        // Parallax ligero en hero
-        const heroImg = document.querySelector('.hero-bg img');
-        window.addEventListener('scroll', () => {
-            const y = window.scrollY;
-            if (y < window.innerHeight) {
-                heroImg.style.transform = `scale(1.05) translateY(${y * 0.15}px)`;
-            }
-        }, { passive: true });
+        // Horizontal scroll with mouse wheel
+        const hscrollTrack = document.querySelector('.hscroll-track');
+        if (hscrollTrack) {
+            hscrollTrack.addEventListener('wheel', (e) => {
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                    e.preventDefault();
+                    hscrollTrack.scrollLeft += e.deltaY;
+                }
+            }, { passive: false });
+        }
     </script>
 
 </body>
