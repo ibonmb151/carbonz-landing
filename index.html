@@ -204,18 +204,24 @@
            ============================================ */
         .hero {
             position: relative;
-            height: 100vh;
-            height: 100dvh;
+            height: 350vh;
             overflow: hidden;
+        }
+
+        .hero-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
             display: flex;
-            align-items: flex-end;
-            justify-content: flex-start;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .hero-3d-container {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -223,35 +229,58 @@
 
         .hero-frame {
             position: absolute;
-            width: 70%;
-            max-width: 600px;
+            width: 55%;
+            max-width: 520px;
             height: auto;
             object-fit: contain;
             opacity: 0;
-            transition: opacity 0.1s ease;
             will-change: opacity, transform;
-            filter: brightness(0.95);
+            filter: brightness(1) drop-shadow(0 20px 60px rgba(0,0,0,0.5));
+            transition: none;
         }
 
         .hero-frame[data-frame="0"] {
             opacity: 1;
         }
 
-        .hero-gradient {
+        /* Background gradient — matches the photo studio look */
+        .hero-bg-gradient {
             position: absolute;
             inset: 0;
-            z-index: 2;
+            z-index: 0;
             background:
-                radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.7) 100%),
-                linear-gradient(to top, var(--black) 0%, transparent 35%),
-                linear-gradient(to bottom, var(--black) 0%, transparent 15%);
+                radial-gradient(ellipse at 50% 50%,
+                    #3a3a3a 0%,
+                    #2a2a2a 20%,
+                    #1a1a1a 40%,
+                    #0d0d0d 60%,
+                    var(--black) 80%
+                );
+        }
+
+        .hero-fade-top {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 15vh;
+            z-index: 3;
+            background: linear-gradient(to bottom, var(--black) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .hero-fade-bottom {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 30vh;
+            z-index: 3;
+            background: linear-gradient(to top, var(--black) 0%, transparent 100%);
             pointer-events: none;
         }
 
         .hero-content {
-            position: relative;
+            position: absolute;
             z-index: 10;
-            padding: 0 24px 14vh;
+            left: 24px;
+            bottom: 14vh;
             max-width: 700px;
         }
 
@@ -291,8 +320,8 @@
             font-size: 0.95rem;
             color: var(--gray-400);
             line-height: 1.7;
-            max-width: 360px;
-            margin-bottom: 36px;
+            max-width: 320px;
+            margin-bottom: 28px;
             opacity: 0;
             transform: translateY(20px);
             animation: heroFadeUp 0.8s ease 0.7s forwards;
@@ -302,26 +331,26 @@
             display: flex;
             align-items: baseline;
             gap: 12px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             opacity: 0;
             transform: translateY(20px);
             animation: heroFadeUp 0.8s ease 0.9s forwards;
         }
 
         .hero-content .price {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: -0.02em;
         }
 
         .hero-content .old-price {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--gray-600);
             text-decoration: line-through;
         }
 
         .hero-content .shipping {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--gray-500);
         }
 
@@ -385,7 +414,8 @@
         }
 
         @media (max-width: 768px) {
-            .hero-content { padding: 0 20px 16vh; }
+            .hero-content { left: 20px; right: 20px; bottom: 12vh; }
+            .hero-frame { width: 80%; }
             .scroll-indicator { display: none; }
         }
 
@@ -1120,35 +1150,38 @@
          HERO — 3D SCROLL EFFECT
          ========================================== -->
     <section class="hero" id="hero">
-        <!-- Multiple images stacked — opacity controlled by scroll -->
-        <div class="hero-3d-container">
-            <img src="hero-frontal.png" alt="Frontal" class="hero-frame" data-frame="0">
-            <img src="diagonal.png" alt="Diagonal" class="hero-frame" data-frame="1">
-            <img src="lateral 2.png" alt="Lateral" class="hero-frame" data-frame="2">
-            <img src="trasera.png" alt="Trasera" class="hero-frame" data-frame="3">
-        </div>
-        <div class="hero-gradient"></div>
-        <div class="hero-content">
-            <p class="eyebrow">Fibra de carbono forjada</p>
-            <h1>
-                <span class="thin">CÚPULA</span>
-                Z900
-            </h1>
-            <p class="desc">Ligereza. Resistencia. Sin concesiones. Cada pieza es única, como tu moto.</p>
-            <div class="price-row">
-                <span class="price">151€</span>
-                <span class="old-price">189€</span>
-                <span class="shipping">Envío incluido</span>
+        <div class="hero-bg-gradient"></div>
+        <div class="hero-sticky">
+            <div class="hero-3d-container">
+                <img src="hero-frontal.png" alt="Frontal" class="hero-frame" data-frame="0">
+                <img src="diagonal.png" alt="Diagonal" class="hero-frame" data-frame="1">
+                <img src="lateral 2.png" alt="Lateral" class="hero-frame" data-frame="2">
+                <img src="trasera.png" alt="Trasera" class="hero-frame" data-frame="3">
             </div>
-            <a href="#comprar" class="btn-hero">
-                Comprar ahora
-                <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
+            <div class="hero-content">
+                <p class="eyebrow">Fibra de carbono forjada</p>
+                <h1>
+                    <span class="thin">CÚPULA</span>
+                    Z900
+                </h1>
+                <p class="desc">Ligereza. Resistencia. Sin concesiones.</p>
+                <div class="price-row">
+                    <span class="price">151€</span>
+                    <span class="old-price">189€</span>
+                    <span class="shipping">Envío incluido</span>
+                </div>
+                <a href="#comprar" class="btn-hero">
+                    Comprar ahora
+                    <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+            <div class="scroll-indicator">
+                <div class="line"></div>
+                Scroll
+            </div>
         </div>
-        <div class="scroll-indicator">
-            <div class="line"></div>
-            Scroll
-        </div>
+        <div class="hero-fade-top"></div>
+        <div class="hero-fade-bottom"></div>
     </section>
 
     <!-- MARQUEE -->
@@ -1410,31 +1443,42 @@
         const heroSection = document.getElementById('hero');
         const totalFrames = heroFrames.length;
 
-        window.addEventListener('scroll', () => {
+        function updateHero3D() {
             const y = window.pageYOffset || document.documentElement.scrollTop;
-            const heroHeight = heroSection.offsetHeight;
+            const heroHeight = heroSection.offsetHeight - window.innerHeight;
 
-            if (y < heroHeight) {
-                // Calculate which frame to show (0 to totalFrames-1)
+            if (y >= 0 && y <= heroHeight) {
+                // Normalize scroll progress (0 to 1) within hero section
                 const progress = y / heroHeight;
+
+                // Calculate which frame to show with easing
+                const easedProgress = progress * progress; // Ease in
                 const frameIndex = Math.min(
-                    Math.floor(progress * totalFrames),
+                    Math.floor(easedProgress * totalFrames),
                     totalFrames - 1
                 );
 
-                // Update opacity for each frame
+                // Calculate sub-frame progress for smooth transitions
+                const subFrameProgress = (easedProgress * totalFrames) % 1;
+
                 heroFrames.forEach((frame, i) => {
                     if (i === frameIndex) {
-                        frame.style.opacity = '1';
-                        // Slight parallax on active frame
-                        const frameProgress = (progress * totalFrames) % 1;
-                        frame.style.transform = `scale(${0.85 + frameProgress * 0.05}) translateY(${frameProgress * -20}px)`;
+                        // Active frame — fade in
+                        frame.style.opacity = Math.min(1, subFrameProgress * 3);
+                        frame.style.transform = `scale(${0.9 + subFrameProgress * 0.1})`;
+                    } else if (i === frameIndex + 1 && subFrameProgress > 0.5) {
+                        // Next frame — start fading in
+                        frame.style.opacity = (subFrameProgress - 0.5) * 2;
+                        frame.style.transform = `scale(${0.85 + (subFrameProgress - 0.5) * 0.1})`;
                     } else {
                         frame.style.opacity = '0';
                     }
                 });
             }
-        }, { passive: true });
+        }
+
+        window.addEventListener('scroll', updateHero3D, { passive: true });
+        updateHero3D();
 
         // Sticky section parallax — text moves up faster
         const stickySection = document.querySelector('.sticky-section');
