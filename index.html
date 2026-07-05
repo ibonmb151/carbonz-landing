@@ -1103,18 +1103,22 @@
     <!-- ==========================================
          HERO — 3D SCROLL EFFECT
          ========================================== -->
-    <div id="hero-spacer" style="height: 400vh; position: relative;">
-        <div id="hero-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-            <div class="hero-bg-gradient"></div>
+    <div id="hero-spacer" style="height: 400vh; position: relative; background: #111;">
+        <div id="hero-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden;">
+            <div class="hero-bg-gradient" style="position:absolute; inset:0; z-index:0; background: radial-gradient(ellipse at 50% 50%, #3a3a3a 0%, #2a2a2a 20%, #1a1a1a 40%, #0d0d0d 60%, #000 80%);"></div>
 
-            <!-- 4 frames stacked -->
-            <img src="hero-frontal.png" alt="" class="hero-frame" id="frame-0" style="position:absolute; width:50%; max-width:480px; opacity:1; z-index:2; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
-            <img src="diagonal.png" alt="" class="hero-frame" id="frame-1" style="position:absolute; width:50%; max-width:480px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
-            <img src="lateral2.png" alt="" class="hero-frame" id="frame-2" style="position:absolute; width:50%; max-width:480px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
-            <img src="trasera.png" alt="" class="hero-frame" id="frame-3" style="position:absolute; width:50%; max-width:480px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <!-- 4 frames — all centered absolutely -->
+            <img src="hero-frontal.png" alt="" id="frame-0" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:1; z-index:2; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <img src="diagonal.png" alt="" id="frame-1" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <img src="lateral2.png" alt="" id="frame-2" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <img src="trasera.png" alt="" id="frame-3" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
 
-            <!-- Content -->
-            <div class="hero-content">
+            <!-- Fades -->
+            <div style="position:absolute; top:0; left:0; right:0; height:12vh; z-index:5; background: linear-gradient(to bottom, #000 0%, transparent 100%); pointer-events:none;"></div>
+            <div style="position:absolute; bottom:0; left:0; right:0; height:25vh; z-index:5; background: linear-gradient(to top, #000 0%, transparent 100%); pointer-events:none;"></div>
+
+            <!-- Content — bottom left -->
+            <div class="hero-content" style="position:absolute; z-index:10; left:24px; bottom:14vh; max-width:700px;">
                 <p class="eyebrow">Fibra de carbono forjada</p>
                 <h1><span class="thin">CÚPULA</span>Z900</h1>
                 <p class="desc">Ligereza. Resistencia. Sin concesiones.</p>
@@ -1128,10 +1132,10 @@
                     <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
             </div>
-            <div class="scroll-indicator"><div class="line"></div>Scroll</div>
+            <div class="scroll-indicator" style="position:absolute; bottom:28px; right:24px; z-index:10;">
+                <div class="line"></div>Scroll
+            </div>
         </div>
-        <div class="hero-fade-top"></div>
-        <div class="hero-fade-bottom"></div>
     </div>
 
     <!-- MARQUEE -->
