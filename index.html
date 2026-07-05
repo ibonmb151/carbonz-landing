@@ -208,8 +208,7 @@
         }
 
         .apple-hero-inner {
-            position: sticky;
-            top: 0;
+            position: relative;
             height: 100vh;
             overflow: hidden;
             display: flex;
@@ -1474,9 +1473,10 @@
         }, { passive: true });
 
         // ============================================
-        // APPLE HERO — sticky scroll frame switching
+        // APPLE HERO — JS-controlled sticky scroll
         // ============================================
         const appleHero = document.getElementById('apple-hero');
+        const appleInner = document.querySelector('.apple-hero-inner');
         const af = [
             document.getElementById('af-0'),
             document.getElementById('af-1'),
@@ -1495,15 +1495,42 @@
         function updateAppleHero() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const heroTop = appleHero.offsetTop;
-            const heroScrollable = appleHero.offsetHeight - window.innerHeight;
-            const progress = Math.max(0, Math.min((scrollTop - heroTop) / heroScrollable, 0.999));
-            const fi = Math.floor(progress * 4);
+            const heroHeight = appleHero.offsetHeight;
+            const vh = window.innerHeight;
 
-            for (let i = 0; i < 4; i++) {
-                af[i].style.opacity = (i === fi) ? '1' : '0';
-                ad[i].className = 'apple-dot' + (i === fi ? ' active' : '');
+            // Is hero in view?
+            const heroBottom = heroTop + heroHeight;
+            const inHero = scrollTop >= heroTop && scrollTop < heroBottom - vh;
+
+            if (inHero) {
+                // Fix the inner container to viewport
+                appleInner.style.position = 'fixed';
+                appleInner.style.top = '0';
+                appleInner.style.left = '0';
+                appleInner.style.width = '100%';
+
+                // Calculate progress within hero scroll
+                const scrollable = heroHeight - vh;
+                const progress = (scrollTop - heroTop) / scrollable;
+                const fi = Math.min(Math.floor(progress * 4), 3);
+
+                for (let i = 0; i < 4; i++) {
+                    af[i].style.opacity = (i === fi) ? '1' : '0';
+                    ad[i].className = 'apple-dot' + (i === fi ? ' active' : '');
+                }
+                appleLabel.textContent = labels[fi];
+            } else if (scrollTop < heroTop) {
+                // Above hero — normal flow
+                appleInner.style.position = 'relative';
+                appleInner.style.top = 'auto';
+                af[0].style.opacity = '1';
+                for (let i = 1; i < 4; i++) af[i].style.opacity = '0';
+            } else {
+                // Below hero — release fixed
+                appleInner.style.position = 'absolute';
+                appleInner.style.top = 'auto';
+                appleInner.style.bottom = '0';
             }
-            appleLabel.textContent = labels[fi];
         }
 
         window.addEventListener('scroll', updateAppleHero, { passive: true });
