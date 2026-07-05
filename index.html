@@ -31,12 +31,12 @@
 
         html {
             overflow-x: hidden;
-            background: var(--black);
+            background: #111;
         }
 
         body {
             font-family: var(--font);
-            background: var(--black);
+            background: #111;
             color: var(--white);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -83,7 +83,7 @@
             backdrop-filter: saturate(150%) blur(16px);
             -webkit-backdrop-filter: saturate(150%) blur(16px);
             border-radius: 980px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -101,7 +101,7 @@
 
         .nav-pill a:hover {
             color: var(--white);
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .nav-pill .pill-cta {
@@ -138,7 +138,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: var(--black);
+            background: #111;
             z-index: 999;
             flex-direction: column;
             align-items: center;
@@ -202,7 +202,7 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(ellipse 100% 80% at 50% 50%, #3a3a3a 0%, #252525 25%, #161616 50%, #0a0a0a 75%, #000 100%);
+                radial-gradient(ellipse 100% 80% at 50% 50%, #555 0%, #444 20%, #333 40%, #222 65%, #111 100%);
         }
 
         .apple-image-container {
@@ -491,7 +491,7 @@
         .sticky-image {
             position: relative;
             overflow: hidden;
-            background: var(--gray-950);
+            background: #1a1a1a;
         }
 
         .sticky-image img {
@@ -586,7 +586,7 @@
         .split-asym .img-side {
             position: relative;
             overflow: hidden;
-            background: var(--gray-950);
+            background: #1a1a1a;
         }
 
         .split-asym .img-side img {
@@ -694,7 +694,7 @@
             flex: 0 0 auto;
             width: 280px;
             scroll-snap-align: start;
-            background: var(--gray-950);
+            background: #1a1a1a;
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.04);
@@ -706,7 +706,7 @@
         .hscroll-card .card-img {
             height: 200px;
             overflow: hidden;
-            background: var(--gray-900);
+            background: #222;
         }
 
         .hscroll-card .card-img img {
@@ -781,12 +781,12 @@
             flex-direction: column;
             justify-content: center;
             padding: 80px 8vw 80px 48px;
-            border-left: 1px solid rgba(255,255,255,0.04);
+            border-left: 1px solid rgba(255,255,255,0.06);
         }
 
         .spec-line {
             padding: 16px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
             display: flex;
             justify-content: space-between;
             align-items: baseline;
@@ -800,7 +800,7 @@
         @media (max-width: 900px) {
             .specs-section { grid-template-columns: 1fr; }
             .specs-left, .specs-right { padding: 40px 20px; }
-            .specs-right { border-left: none; border-top: 1px solid rgba(255,255,255,0.04); }
+            .specs-right { border-left: none; border-top: 1px solid rgba(255,255,255,0.06); }
         }
 
         /* ============================================
@@ -867,7 +867,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to right, var(--black) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.25) 100%);
+            background: linear-gradient(to right, #111 0%, rgba(17,17,17,0.55) 50%, rgba(17,17,17,0.25) 100%);
         }
 
         .cta-content {
@@ -1006,7 +1006,7 @@
            FOOTER
            ============================================ */
         footer {
-            border-top: 1px solid rgba(255,255,255,0.04);
+            border-top: 1px solid rgba(255,255,255,0.06);
             padding: 24px 48px;
             display: flex;
             justify-content: space-between;
