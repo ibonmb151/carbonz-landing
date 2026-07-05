@@ -200,7 +200,7 @@
         }
 
         /* ============================================
-           HERO
+           HERO — 3D SCROLL
            ============================================ */
         .hero {
             position: relative;
@@ -212,20 +212,29 @@
             justify-content: flex-start;
         }
 
-        .hero-bg {
+        .hero-3d-container {
             position: absolute;
             inset: 0;
             z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .hero-bg img {
-            width: 100%;
-            height: 100%;
+        .hero-frame {
+            position: absolute;
+            width: 70%;
+            max-width: 600px;
+            height: auto;
             object-fit: contain;
-            object-position: center center;
-            will-change: transform;
-            transform: scale(0.85);
+            opacity: 0;
+            transition: opacity 0.1s ease;
+            will-change: opacity, transform;
             filter: brightness(0.95);
+        }
+
+        .hero-frame[data-frame="0"] {
+            opacity: 1;
         }
 
         .hero-gradient {
@@ -233,10 +242,10 @@
             inset: 0;
             z-index: 2;
             background:
-                radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%),
-                linear-gradient(to top, var(--black) 0%, transparent 40%),
-                linear-gradient(to bottom, var(--black) 0%, transparent 20%),
-                linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 40%);
+                radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.7) 100%),
+                linear-gradient(to top, var(--black) 0%, transparent 35%),
+                linear-gradient(to bottom, var(--black) 0%, transparent 15%);
+            pointer-events: none;
         }
 
         .hero-content {
@@ -1108,11 +1117,15 @@
     </div>
 
     <!-- ==========================================
-         HERO
+         HERO — 3D SCROLL EFFECT
          ========================================== -->
-    <section class="hero">
-        <div class="hero-bg">
-            <img src="hero-frontal.png" alt="Cúpula carbono forjado Z900" id="heroImg">
+    <section class="hero" id="hero">
+        <!-- Multiple images stacked — opacity controlled by scroll -->
+        <div class="hero-3d-container">
+            <img src="hero-frontal.png" alt="Frontal" class="hero-frame" data-frame="0">
+            <img src="diagonal.png" alt="Diagonal" class="hero-frame" data-frame="1">
+            <img src="lateral 2.png" alt="Lateral" class="hero-frame" data-frame="2">
+            <img src="trasera.png" alt="Trasera" class="hero-frame" data-frame="3">
         </div>
         <div class="hero-gradient"></div>
         <div class="hero-content">
@@ -1391,13 +1404,35 @@
         }, { passive: true });
 
         // ============================================
-        // PARALLAX HERO
+        // HERO 3D SCROLL — frame switching
         // ============================================
-        const heroImg = document.getElementById('heroImg');
+        const heroFrames = document.querySelectorAll('.hero-frame');
+        const heroSection = document.getElementById('hero');
+        const totalFrames = heroFrames.length;
+
         window.addEventListener('scroll', () => {
             const y = window.pageYOffset || document.documentElement.scrollTop;
-            if (y < window.innerHeight) {
-                heroImg.style.transform = `scale(0.85) translateY(${y * 0.15}px)`;
+            const heroHeight = heroSection.offsetHeight;
+
+            if (y < heroHeight) {
+                // Calculate which frame to show (0 to totalFrames-1)
+                const progress = y / heroHeight;
+                const frameIndex = Math.min(
+                    Math.floor(progress * totalFrames),
+                    totalFrames - 1
+                );
+
+                // Update opacity for each frame
+                heroFrames.forEach((frame, i) => {
+                    if (i === frameIndex) {
+                        frame.style.opacity = '1';
+                        // Slight parallax on active frame
+                        const frameProgress = (progress * totalFrames) % 1;
+                        frame.style.transform = `scale(${0.85 + frameProgress * 0.05}) translateY(${frameProgress * -20}px)`;
+                    } else {
+                        frame.style.opacity = '0';
+                    }
+                });
             }
         }, { passive: true });
 
