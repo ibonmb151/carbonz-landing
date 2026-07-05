@@ -29,7 +29,7 @@
         html {
             overflow-x: hidden;
             scroll-behavior: auto;
-            scroll-snap-type: proximity;
+            background: var(--black);
         }
 
         body {
@@ -38,6 +38,7 @@
             color: var(--white);
             -webkit-font-smoothing: antialiased;
             overscroll-behavior: none;
+            overflow-x: hidden;
         }
 
         /* Smooth scroll inertia via JS — CSS fallback */
@@ -224,6 +225,7 @@
             object-position: center center;
             will-change: transform;
             transform: scale(0.85);
+            filter: brightness(0.95);
         }
 
         .hero-gradient {
@@ -231,8 +233,10 @@
             inset: 0;
             z-index: 2;
             background:
-                linear-gradient(to top, var(--black) 0%, transparent 45%),
-                linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 55%);
+                radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%),
+                linear-gradient(to top, var(--black) 0%, transparent 40%),
+                linear-gradient(to bottom, var(--black) 0%, transparent 20%),
+                linear-gradient(to right, rgba(0,0,0,0.5) 0%, transparent 40%);
         }
 
         .hero-content {
@@ -1350,24 +1354,22 @@
         // ============================================
         let currentScroll = 0;
         let targetScroll = 0;
-        let ease = 0.08;
+        let ease = 0.07;
         let rafId = null;
+        let wrapper = null;
 
-        // Create wrapper for smooth scroll
         function initSmoothScroll() {
             // Only on desktop
-            if (window.innerWidth < 768) return;
+            if (window.innerWidth < 900) return;
 
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-            document.body.style.top = '0';
+            // Disable CSS smooth scroll
+            document.documentElement.style.scrollBehavior = 'auto';
 
-            // Wrapper
-            const wrapper = document.createElement('div');
+            wrapper = document.createElement('div');
             wrapper.id = 'scroll-wrapper';
-            wrapper.style.cssText = 'position: relative; width: 100%;';
+            wrapper.style.cssText = 'position: relative; width: 100%; will-change: transform;';
 
-            // Move body content to wrapper
+            // Move all body children to wrapper
             while (document.body.firstChild) {
                 wrapper.appendChild(document.body.firstChild);
             }
@@ -1380,19 +1382,38 @@
             setHeight();
             window.addEventListener('resize', setHeight);
 
-            // Scroll handler
-            window.addEventListener('scroll', () => {
-                targetScroll = window.pageYOffset || document.documentElement.scrollTop;
+            // Target scroll from wheel
+            window.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                targetScroll = Math.max(0, Math.min(
+                    targetScroll + e.deltaY,
+                    wrapper.scrollHeight - window.innerHeight
+                ));
+                window.scrollTo(0, targetScroll);
+            }, { passive: false });
+
+            // Also handle touch
+            let touchStart = 0;
+            window.addEventListener('touchstart', (e) => {
+                touchStart = e.touches[0].clientY;
             }, { passive: true });
 
-            // Animation loop
+            window.addEventListener('touchmove', (e) => {
+                const delta = touchStart - e.touches[0].clientY;
+                touchStart = e.touches[0].clientY;
+                targetScroll = Math.max(0, Math.min(
+                    targetScroll + delta,
+                    wrapper.scrollHeight - window.innerHeight
+                ));
+                window.scrollTo(0, targetScroll);
+            }, { passive: true });
+
+            // Smooth animation loop
             function smoothScroll() {
                 currentScroll += (targetScroll - currentScroll) * ease;
 
-                // Apply transform
                 wrapper.style.transform = `translate3d(0, ${-currentScroll}px, 0)`;
 
-                // Round to avoid sub-pixel rendering
                 if (Math.abs(targetScroll - currentScroll) < 0.5) {
                     currentScroll = targetScroll;
                 }
@@ -1403,7 +1424,6 @@
             smoothScroll();
         }
 
-        // Initialize smooth scroll
         initSmoothScroll();
 
         // ============================================
