@@ -26,11 +26,7 @@
             --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        html {
-            overflow-x: hidden;
-            scroll-behavior: auto;
-            scroll-snap-type: proximity;
-        }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
 
         body {
             font-family: var(--font);
@@ -38,11 +34,6 @@
             color: var(--white);
             -webkit-font-smoothing: antialiased;
             overscroll-behavior: none;
-        }
-
-        /* Smooth scroll inertia via JS — CSS fallback */
-        * {
-            scroll-behavior: smooth;
         }
 
         img { max-width: 100%; display: block; }
@@ -220,10 +211,9 @@
         .hero-bg img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            object-position: center center;
+            object-fit: cover;
+            object-position: center 30%;
             will-change: transform;
-            transform: scale(0.85);
         }
 
         .hero-gradient {
@@ -1080,6 +1070,7 @@
 
     <!-- HEADER -->
     <header class="header transparent" id="mainHeader">
+        <div class="logo">CarbonZ</div>
         <div class="hamburger" id="hamburger">
             <span></span>
             <span></span>
@@ -1297,7 +1288,7 @@
     <section class="stock-section">
         <div class="stock-badge">
             <div class="pulse"></div>
-            <span>Quedan <strong id="stockCount">2</strong> unidades en stock</span>
+            <span>Quedan <strong id="stockCount">12</strong> unidades en stock</span>
         </div>
     </section>
 
@@ -1345,85 +1336,21 @@
     </a>
 
     <script>
-        // ============================================
-        // SMOOTH SCROLL WITH INERTIA
-        // ============================================
-        let currentScroll = 0;
-        let targetScroll = 0;
-        let ease = 0.08;
-        let rafId = null;
-
-        // Create wrapper for smooth scroll
-        function initSmoothScroll() {
-            // Only on desktop
-            if (window.innerWidth < 768) return;
-
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-            document.body.style.top = '0';
-
-            // Wrapper
-            const wrapper = document.createElement('div');
-            wrapper.id = 'scroll-wrapper';
-            wrapper.style.cssText = 'position: relative; width: 100%;';
-
-            // Move body content to wrapper
-            while (document.body.firstChild) {
-                wrapper.appendChild(document.body.firstChild);
-            }
-            document.body.appendChild(wrapper);
-
-            // Set body height
-            function setHeight() {
-                document.body.style.height = wrapper.scrollHeight + 'px';
-            }
-            setHeight();
-            window.addEventListener('resize', setHeight);
-
-            // Scroll handler
-            window.addEventListener('scroll', () => {
-                targetScroll = window.pageYOffset || document.documentElement.scrollTop;
-            }, { passive: true });
-
-            // Animation loop
-            function smoothScroll() {
-                currentScroll += (targetScroll - currentScroll) * ease;
-
-                // Apply transform
-                wrapper.style.transform = `translate3d(0, ${-currentScroll}px, 0)`;
-
-                // Round to avoid sub-pixel rendering
-                if (Math.abs(targetScroll - currentScroll) < 0.5) {
-                    currentScroll = targetScroll;
-                }
-
-                rafId = requestAnimationFrame(smoothScroll);
-            }
-
-            smoothScroll();
-        }
-
-        // Initialize smooth scroll
-        initSmoothScroll();
-
-        // ============================================
-        // PROGRESS BAR
-        // ============================================
+        // Progress bar
         const progressBar = document.getElementById('progressBar');
         window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollTop = document.documentElement.scrollTop;
             const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             progressBar.style.transform = `scaleX(${scrollTop / scrollHeight})`;
         }, { passive: true });
 
-        // ============================================
-        // HEADER + NAV PILL + WHATSAPP
-        // ============================================
+        // Header transparent → solid + nav pill
         const header = document.getElementById('mainHeader');
         const navPill = document.getElementById('navPill');
+        let lastScroll = 0;
 
         window.addEventListener('scroll', () => {
-            const y = window.pageYOffset || document.documentElement.scrollTop;
+            const y = window.scrollY;
 
             // Header
             if (y > 80) {
@@ -1434,30 +1361,30 @@
                 header.classList.add('transparent');
             }
 
-            // Nav pill
+            // Nav pill — visible after hero
             if (y > window.innerHeight * 0.5) {
                 navPill.classList.add('visible');
             } else {
                 navPill.classList.remove('visible');
             }
 
-            // WhatsApp
+            // WhatsApp button
             const whatsapp = document.getElementById('whatsappBtn');
             if (y > window.innerHeight * 0.8) {
                 whatsapp.classList.add('visible');
             } else {
                 whatsapp.classList.remove('visible');
             }
+
+            lastScroll = y;
         }, { passive: true });
 
-        // ============================================
-        // PARALLAX HERO
-        // ============================================
+        // Parallax hero
         const heroImg = document.getElementById('heroImg');
         window.addEventListener('scroll', () => {
-            const y = window.pageYOffset || document.documentElement.scrollTop;
+            const y = window.scrollY;
             if (y < window.innerHeight) {
-                heroImg.style.transform = `scale(0.85) translateY(${y * 0.15}px)`;
+                heroImg.style.transform = `scale(1.08) translateY(${y * 0.2}px)`;
             }
         }, { passive: true });
 
@@ -1542,8 +1469,17 @@
 
         lazyImages.forEach(img => imgObserver.observe(img));
 
-        // Stock static — no animation
-        // Stock is fixed at 2 units
+        // Stock counter animation
+        const stockEl = document.getElementById('stockCount');
+        let stock = 12;
+        setInterval(() => {
+            if (stock > 3 && Math.random() > 0.7) {
+                stock--;
+                stockEl.textContent = stock;
+                stockEl.style.transform = 'scale(1.2)';
+                setTimeout(() => stockEl.style.transform = 'scale(1)', 200);
+            }
+        }, 15000);
     </script>
 
 </body>
