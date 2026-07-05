@@ -235,12 +235,12 @@
             object-fit: contain;
             opacity: 0;
             will-change: opacity, transform;
-            filter: brightness(1) drop-shadow(0 20px 60px rgba(0,0,0,0.5));
-            transition: none;
+            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));
         }
 
         .hero-frame[data-frame="0"] {
             opacity: 1;
+            z-index: 2;
         }
 
         /* Background gradient — matches the photo studio look */
@@ -1444,37 +1444,35 @@
         const totalFrames = heroFrames.length;
 
         function updateHero3D() {
-            const y = window.pageYOffset || document.documentElement.scrollTop;
-            const heroHeight = heroSection.offsetHeight - window.innerHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const heroTop = heroSection.offsetTop;
+            const heroScrollable = heroSection.offsetHeight - window.innerHeight;
 
-            if (y >= 0 && y <= heroHeight) {
-                // Normalize scroll progress (0 to 1) within hero section
-                const progress = y / heroHeight;
+            // Progress within hero (0 to 1)
+            const progress = Math.max(0, Math.min(1, (scrollTop - heroTop) / heroScrollable));
 
-                // Calculate which frame to show with easing
-                const easedProgress = progress * progress; // Ease in
-                const frameIndex = Math.min(
-                    Math.floor(easedProgress * totalFrames),
-                    totalFrames - 1
-                );
+            // Which frame (0, 1, 2, 3)
+            const rawFrame = progress * totalFrames;
+            const frameIndex = Math.min(Math.floor(rawFrame), totalFrames - 1);
+            const frameProgress = rawFrame - frameIndex;
 
-                // Calculate sub-frame progress for smooth transitions
-                const subFrameProgress = (easedProgress * totalFrames) % 1;
-
-                heroFrames.forEach((frame, i) => {
-                    if (i === frameIndex) {
-                        // Active frame — fade in
-                        frame.style.opacity = Math.min(1, subFrameProgress * 3);
-                        frame.style.transform = `scale(${0.9 + subFrameProgress * 0.1})`;
-                    } else if (i === frameIndex + 1 && subFrameProgress > 0.5) {
-                        // Next frame — start fading in
-                        frame.style.opacity = (subFrameProgress - 0.5) * 2;
-                        frame.style.transform = `scale(${0.85 + (subFrameProgress - 0.5) * 0.1})`;
-                    } else {
-                        frame.style.opacity = '0';
-                    }
-                });
-            }
+            heroFrames.forEach((frame, i) => {
+                if (i === frameIndex) {
+                    // Current frame — fully visible
+                    frame.style.opacity = '1';
+                    frame.style.transform = `scale(${0.92 + frameProgress * 0.08})`;
+                    frame.style.zIndex = '2';
+                } else if (i === frameIndex + 1) {
+                    // Next frame — fading in based on progress
+                    frame.style.opacity = String(Math.min(1, frameProgress));
+                    frame.style.transform = `scale(${0.88 + frameProgress * 0.04})`;
+                    frame.style.zIndex = '1';
+                } else {
+                    // Hidden frames
+                    frame.style.opacity = '0';
+                    frame.style.zIndex = '0';
+                }
+            });
         }
 
         window.addEventListener('scroll', updateHero3D, { passive: true });
