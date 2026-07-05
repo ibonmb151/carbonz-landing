@@ -200,69 +200,23 @@
         }
 
         /* ============================================
-           HERO — 3D SCROLL
+           HERO BG GRADIENT (inline style backup)
            ============================================ */
-        .hero {
-            position: relative;
-            height: 350vh;
-            overflow: hidden;
-        }
-
-        .hero-sticky {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hero-3d-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-frame {
-            position: absolute;
-            width: 55%;
-            max-width: 520px;
-            height: auto;
-            object-fit: contain;
-            opacity: 0;
-            will-change: opacity, transform;
-            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));
-        }
-
-        .hero-frame[data-frame="0"] {
-            opacity: 1;
-            z-index: 2;
-        }
-
-        /* Background gradient — matches the photo studio look */
         .hero-bg-gradient {
             position: absolute;
             inset: 0;
             z-index: 0;
             background:
                 radial-gradient(ellipse at 50% 50%,
-                    #3a3a3a 0%,
-                    #2a2a2a 20%,
-                    #1a1a1a 40%,
-                    #0d0d0d 60%,
-                    var(--black) 80%
+                    #3a3a3a 0%, #2a2a2a 20%, #1a1a1a 40%, #0d0d0d 60%, var(--black) 80%
                 );
         }
 
         .hero-fade-top {
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 15vh;
-            z-index: 3;
+            height: 12vh;
+            z-index: 5;
             background: linear-gradient(to bottom, var(--black) 0%, transparent 100%);
             pointer-events: none;
         }
@@ -270,8 +224,8 @@
         .hero-fade-bottom {
             position: absolute;
             bottom: 0; left: 0; right: 0;
-            height: 30vh;
-            z-index: 3;
+            height: 25vh;
+            z-index: 5;
             background: linear-gradient(to top, var(--black) 0%, transparent 100%);
             pointer-events: none;
         }
@@ -1149,21 +1103,20 @@
     <!-- ==========================================
          HERO — 3D SCROLL EFFECT
          ========================================== -->
-    <section class="hero" id="hero">
-        <div class="hero-bg-gradient"></div>
-        <div class="hero-sticky">
-            <div class="hero-3d-container">
-                <img src="hero-frontal.png" alt="Frontal" class="hero-frame" data-frame="0">
-                <img src="diagonal.png" alt="Diagonal" class="hero-frame" data-frame="1">
-                <img src="lateral 2.png" alt="Lateral" class="hero-frame" data-frame="2">
-                <img src="trasera.png" alt="Trasera" class="hero-frame" data-frame="3">
-            </div>
+    <div id="hero-spacer" style="height: 400vh; position: relative;">
+        <div id="hero-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+            <div class="hero-bg-gradient"></div>
+
+            <!-- 4 frames stacked -->
+            <img src="hero-frontal.png" alt="" class="hero-frame" id="frame-0" style="position:absolute; width:50%; max-width:480px; opacity:1; z-index:2; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <img src="diagonal.png" alt="" class="hero-frame" id="frame-1" style="position:absolute; width:50%; max-width:480px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <img src="lateral2.png" alt="" class="hero-frame" id="frame-2" style="position:absolute; width:50%; max-width:480px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <img src="trasera.png" alt="" class="hero-frame" id="frame-3" style="position:absolute; width:50%; max-width:480px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+
+            <!-- Content -->
             <div class="hero-content">
                 <p class="eyebrow">Fibra de carbono forjada</p>
-                <h1>
-                    <span class="thin">CÚPULA</span>
-                    Z900
-                </h1>
+                <h1><span class="thin">CÚPULA</span>Z900</h1>
                 <p class="desc">Ligereza. Resistencia. Sin concesiones.</p>
                 <div class="price-row">
                     <span class="price">151€</span>
@@ -1175,14 +1128,11 @@
                     <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
             </div>
-            <div class="scroll-indicator">
-                <div class="line"></div>
-                Scroll
-            </div>
+            <div class="scroll-indicator"><div class="line"></div>Scroll</div>
         </div>
         <div class="hero-fade-top"></div>
         <div class="hero-fade-bottom"></div>
-    </section>
+    </div>
 
     <!-- MARQUEE -->
     <div class="marquee-section">
@@ -1439,29 +1389,24 @@
         // ============================================
         // HERO 3D SCROLL — frame switching
         // ============================================
-        const heroFrames = document.querySelectorAll('.hero-frame');
-        const heroSection = document.getElementById('hero');
-        const totalFrames = heroFrames.length;
+        const frame0 = document.getElementById('frame-0');
+        const frame1 = document.getElementById('frame-1');
+        const frame2 = document.getElementById('frame-2');
+        const frame3 = document.getElementById('frame-3');
+        const heroSpacer = document.getElementById('hero-spacer');
+        const frames = [frame0, frame1, frame2, frame3];
 
         function updateHero3D() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const heroHeight = heroSection.offsetHeight - window.innerHeight;
+            const scrollable = heroSpacer.offsetHeight - window.innerHeight;
+            const progress = Math.max(0, Math.min(scrollTop / scrollable, 0.999));
+            const rawFrame = progress * 4;
+            const fi = Math.floor(rawFrame);
 
-            // Simple progress: 0 to 1 over the hero scroll
-            const progress = Math.max(0, Math.min(scrollTop / heroHeight, 0.999));
-
-            // Frame index (0 to 3)
-            const frameIndex = Math.floor(progress * totalFrames);
-
-            console.log('Scroll:', scrollTop, 'Hero height:', heroHeight, 'Progress:', progress, 'Frame:', frameIndex);
-
-            heroFrames.forEach((frame, i) => {
-                if (i === frameIndex) {
-                    frame.style.opacity = '1';
-                } else {
-                    frame.style.opacity = '0';
-                }
-            });
+            for (let i = 0; i < 4; i++) {
+                frames[i].style.opacity = (i === fi) ? '1' : '0';
+                frames[i].style.zIndex = (i === fi) ? '2' : '1';
+            }
         }
 
         window.addEventListener('scroll', updateHero3D, { passive: true });
