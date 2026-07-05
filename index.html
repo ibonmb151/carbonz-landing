@@ -200,16 +200,89 @@
         }
 
         /* ============================================
-           HERO BG GRADIENT (inline style backup)
+           APPLE STYLE HERO
            ============================================ */
-        .hero-bg-gradient {
+        .apple-hero {
+            height: 500vh;
+            position: relative;
+        }
+
+        .apple-hero-inner {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .apple-bg {
             position: absolute;
             inset: 0;
-            z-index: 0;
-            background:
-                radial-gradient(ellipse at 50% 50%,
-                    #3a3a3a 0%, #2a2a2a 20%, #1a1a1a 40%, #0d0d0d 60%, var(--black) 80%
-                );
+            background: radial-gradient(ellipse at 50% 50%, #2a2a2a 0%, #1a1a1a 30%, #0d0d0d 60%, #000 85%);
+        }
+
+        .apple-image-container {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .apple-frame {
+            position: absolute;
+            width: 42%;
+            max-width: 420px;
+            height: auto;
+            transition: opacity 0.3s ease;
+            filter: drop-shadow(0 30px 80px rgba(0,0,0,0.6));
+        }
+
+        .apple-dots {
+            position: absolute;
+            bottom: 15vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .apple-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .apple-dot.active {
+            background: var(--white);
+            transform: scale(1.3);
+        }
+
+        .apple-label {
+            position: absolute;
+            bottom: calc(15vh + 30px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            z-index: 10;
+            transition: opacity 0.3s ease;
+        }
+
+        .apple-content {
+            position: absolute;
+            z-index: 10;
+            left: 24px;
+            bottom: 22vh;
+            max-width: 700px;
         }
 
         .hero-fade-top {
@@ -1101,24 +1174,35 @@
     </div>
 
     <!-- ==========================================
-         HERO — 3D SCROLL EFFECT
+         HERO — APPLE STYLE STICKY SCROLL
          ========================================== -->
-    <div id="hero-spacer" style="height: 400vh; position: relative; background: #111;">
-        <div id="hero-sticky" style="position: sticky; top: 0; height: 100vh; overflow: hidden;">
-            <div class="hero-bg-gradient" style="position:absolute; inset:0; z-index:0; background: radial-gradient(ellipse at 50% 50%, #3a3a3a 0%, #2a2a2a 20%, #1a1a1a 40%, #0d0d0d 60%, #000 80%);"></div>
+    <div class="apple-hero" id="apple-hero">
+        <!-- This div stays fixed on screen while you scroll through it -->
+        <div class="apple-hero-inner">
+            <!-- Background -->
+            <div class="apple-bg"></div>
 
-            <!-- 4 frames — all centered absolutely -->
-            <img src="hero-frontal.png" alt="" id="frame-0" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:1; z-index:2; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
-            <img src="diagonal.png" alt="" id="frame-1" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
-            <img src="lateral2.png" alt="" id="frame-2" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
-            <img src="trasera.png" alt="" id="frame-3" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:45%; max-width:440px; opacity:0; z-index:1; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.5));">
+            <!-- The image that changes -->
+            <div class="apple-image-container">
+                <img src="hero-frontal.png" alt="" class="apple-frame" id="af-0" style="opacity:1;">
+                <img src="diagonal.png" alt="" class="apple-frame" id="af-1" style="opacity:0;">
+                <img src="lateral2.png" alt="" class="apple-frame" id="af-2" style="opacity:0;">
+                <img src="trasera.png" alt="" class="apple-frame" id="af-3" style="opacity:0;">
+            </div>
 
-            <!-- Fades -->
-            <div style="position:absolute; top:0; left:0; right:0; height:12vh; z-index:5; background: linear-gradient(to bottom, #000 0%, transparent 100%); pointer-events:none;"></div>
-            <div style="position:absolute; bottom:0; left:0; right:0; height:25vh; z-index:5; background: linear-gradient(to top, #000 0%, transparent 100%); pointer-events:none;"></div>
+            <!-- Frame indicator dots -->
+            <div class="apple-dots">
+                <span class="apple-dot active" id="ad-0"></span>
+                <span class="apple-dot" id="ad-1"></span>
+                <span class="apple-dot" id="ad-2"></span>
+                <span class="apple-dot" id="ad-3"></span>
+            </div>
 
-            <!-- Content — bottom left -->
-            <div class="hero-content" style="position:absolute; z-index:10; left:24px; bottom:14vh; max-width:700px;">
+            <!-- Frame label -->
+            <div class="apple-label" id="apple-label">Vista frontal</div>
+
+            <!-- Hero content -->
+            <div class="apple-content">
                 <p class="eyebrow">Fibra de carbono forjada</p>
                 <h1><span class="thin">CÚPULA</span>Z900</h1>
                 <p class="desc">Ligereza. Resistencia. Sin concesiones.</p>
@@ -1132,9 +1216,8 @@
                     <svg viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
             </div>
-            <div class="scroll-indicator" style="position:absolute; bottom:28px; right:24px; z-index:10;">
-                <div class="line"></div>Scroll
-            </div>
+
+            <div class="scroll-indicator"><div class="line"></div>Scroll</div>
         </div>
     </div>
 
@@ -1391,30 +1474,40 @@
         }, { passive: true });
 
         // ============================================
-        // HERO 3D SCROLL — frame switching
+        // APPLE HERO — sticky scroll frame switching
         // ============================================
-        const frame0 = document.getElementById('frame-0');
-        const frame1 = document.getElementById('frame-1');
-        const frame2 = document.getElementById('frame-2');
-        const frame3 = document.getElementById('frame-3');
-        const heroSpacer = document.getElementById('hero-spacer');
-        const frames = [frame0, frame1, frame2, frame3];
+        const appleHero = document.getElementById('apple-hero');
+        const af = [
+            document.getElementById('af-0'),
+            document.getElementById('af-1'),
+            document.getElementById('af-2'),
+            document.getElementById('af-3')
+        ];
+        const ad = [
+            document.getElementById('ad-0'),
+            document.getElementById('ad-1'),
+            document.getElementById('ad-2'),
+            document.getElementById('ad-3')
+        ];
+        const appleLabel = document.getElementById('apple-label');
+        const labels = ['Vista frontal', 'Vista diagonal', 'Vista lateral', 'Vista trasera'];
 
-        function updateHero3D() {
+        function updateAppleHero() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const scrollable = heroSpacer.offsetHeight - window.innerHeight;
-            const progress = Math.max(0, Math.min(scrollTop / scrollable, 0.999));
-            const rawFrame = progress * 4;
-            const fi = Math.floor(rawFrame);
+            const heroTop = appleHero.offsetTop;
+            const heroScrollable = appleHero.offsetHeight - window.innerHeight;
+            const progress = Math.max(0, Math.min((scrollTop - heroTop) / heroScrollable, 0.999));
+            const fi = Math.floor(progress * 4);
 
             for (let i = 0; i < 4; i++) {
-                frames[i].style.opacity = (i === fi) ? '1' : '0';
-                frames[i].style.zIndex = (i === fi) ? '2' : '1';
+                af[i].style.opacity = (i === fi) ? '1' : '0';
+                ad[i].className = 'apple-dot' + (i === fi ? ' active' : '');
             }
+            appleLabel.textContent = labels[fi];
         }
 
-        window.addEventListener('scroll', updateHero3D, { passive: true });
-        updateHero3D();
+        window.addEventListener('scroll', updateAppleHero, { passive: true });
+        updateAppleHero();
 
         // Sticky section parallax — text moves up faster
         const stickySection = document.querySelector('.sticky-section');
