@@ -28,7 +28,7 @@
 
         html {
             overflow-x: hidden;
-            scroll-behavior: auto;
+            scroll-behavior: smooth;
             background: var(--black);
         }
 
@@ -37,14 +37,14 @@
             background: var(--black);
             color: var(--white);
             -webkit-font-smoothing: antialiased;
-            overscroll-behavior: none;
             overflow-x: hidden;
         }
 
-        /* Smooth scroll inertia via JS — CSS fallback */
         * {
             scroll-behavior: smooth;
         }
+
+        /* NO scroll-snap — allows free scroll */
 
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
@@ -1350,83 +1350,6 @@
 
     <script>
         // ============================================
-        // SMOOTH SCROLL WITH INERTIA
-        // ============================================
-        let currentScroll = 0;
-        let targetScroll = 0;
-        let ease = 0.07;
-        let rafId = null;
-        let wrapper = null;
-
-        function initSmoothScroll() {
-            // Only on desktop
-            if (window.innerWidth < 900) return;
-
-            // Disable CSS smooth scroll
-            document.documentElement.style.scrollBehavior = 'auto';
-
-            wrapper = document.createElement('div');
-            wrapper.id = 'scroll-wrapper';
-            wrapper.style.cssText = 'position: relative; width: 100%; will-change: transform;';
-
-            // Move all body children to wrapper
-            while (document.body.firstChild) {
-                wrapper.appendChild(document.body.firstChild);
-            }
-            document.body.appendChild(wrapper);
-
-            // Set body height
-            function setHeight() {
-                document.body.style.height = wrapper.scrollHeight + 'px';
-            }
-            setHeight();
-            window.addEventListener('resize', setHeight);
-
-            // Target scroll from wheel
-            window.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                targetScroll = Math.max(0, Math.min(
-                    targetScroll + e.deltaY,
-                    wrapper.scrollHeight - window.innerHeight
-                ));
-                window.scrollTo(0, targetScroll);
-            }, { passive: false });
-
-            // Also handle touch
-            let touchStart = 0;
-            window.addEventListener('touchstart', (e) => {
-                touchStart = e.touches[0].clientY;
-            }, { passive: true });
-
-            window.addEventListener('touchmove', (e) => {
-                const delta = touchStart - e.touches[0].clientY;
-                touchStart = e.touches[0].clientY;
-                targetScroll = Math.max(0, Math.min(
-                    targetScroll + delta,
-                    wrapper.scrollHeight - window.innerHeight
-                ));
-                window.scrollTo(0, targetScroll);
-            }, { passive: true });
-
-            // Smooth animation loop
-            function smoothScroll() {
-                currentScroll += (targetScroll - currentScroll) * ease;
-
-                wrapper.style.transform = `translate3d(0, ${-currentScroll}px, 0)`;
-
-                if (Math.abs(targetScroll - currentScroll) < 0.5) {
-                    currentScroll = targetScroll;
-                }
-
-                rafId = requestAnimationFrame(smoothScroll);
-            }
-
-            smoothScroll();
-        }
-
-        initSmoothScroll();
-
-        // ============================================
         // PROGRESS BAR
         // ============================================
         const progressBar = document.getElementById('progressBar');
@@ -1445,7 +1368,6 @@
         window.addEventListener('scroll', () => {
             const y = window.pageYOffset || document.documentElement.scrollTop;
 
-            // Header
             if (y > 80) {
                 header.classList.remove('transparent');
                 header.classList.add('solid');
@@ -1454,14 +1376,12 @@
                 header.classList.add('transparent');
             }
 
-            // Nav pill
             if (y > window.innerHeight * 0.5) {
                 navPill.classList.add('visible');
             } else {
                 navPill.classList.remove('visible');
             }
 
-            // WhatsApp
             const whatsapp = document.getElementById('whatsappBtn');
             if (y > window.innerHeight * 0.8) {
                 whatsapp.classList.add('visible');
