@@ -423,11 +423,6 @@ export default function Home() {
             <p className="desc">
               Ligereza. Resistencia. Sin concesiones.
             </p>
-            <div className="price-row">
-              <span className="price">151€</span>
-              <span className="old-price">189€</span>
-              <span className="shipping">Envio incluido</span>
-            </div>
             <a href="#comprar" className="btn-hero">
               Comprar ahora
               <svg viewBox="0 0 14 14" fill="none">
