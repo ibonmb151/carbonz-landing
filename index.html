@@ -839,46 +839,6 @@
         }
 
         /* ============================================
-           STOCK
-           ============================================ */
-        .stock-section {
-            padding: 60px 24px;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-            background: #111;
-        }
-
-        .stock-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: var(--green-soft);
-            border: 1px solid rgba(48, 209, 88, 0.15);
-            border-radius: 980px;
-        }
-
-        .stock-badge .pulse {
-            width: 6px;
-            height: 6px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.4); }
-        }
-
-        .stock-badge span {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--green);
-        }
-
-        /* ============================================
            CTA FINAL
            ============================================ */
         .cta-final {
@@ -972,6 +932,39 @@
             display: block;
             font-size: 0.42em;
             letter-spacing: 0.02em;
+        }
+
+        .stock-alert {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--green);
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+            padding: 6px 14px;
+            background: rgba(48,209,88,0.08);
+            border: 1px solid rgba(48,209,88,0.15);
+            border-radius: 980px;
+        }
+
+        .stock-alert strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .stock-alert em {
+            font-style: normal;
+            color: var(--gray-500);
+        }
+
+        .stock-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
         }
 
         .cta-price-row {
@@ -1336,14 +1329,6 @@
         </div>
     </section>
 
-    <!-- STOCK -->
-    <section class="stock-section">
-        <div class="stock-badge">
-            <div class="pulse"></div>
-            <span>Quedan <strong id="stockCount">2</strong> unidades en stock</span>
-        </div>
-    </section>
-
     <!-- CTA FINAL -->
     <section class="cta-final" id="comprar">
         <div class="cta-bg">
@@ -1359,7 +1344,11 @@
             <div class="speed-line"></div>
         </div>
         <div class="cta-content">
-            <h2>¿Listo<br><br><span class="thin">para volar?</span></h2>
+            <div class="stock-alert">
+                <span class="stock-dot"></span>
+                Quedan <strong>2</strong> unidades —<em>última oportunidad</em>
+            </div>
+            <h2>¿Listo para volar?</h2>
             <div class="cta-price-row">
                 <span class="big">151€</span>
                 <span class="old">189€</span>
