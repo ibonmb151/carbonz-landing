@@ -200,7 +200,7 @@
         .apple-bg {
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse 100% 80% at 50% 50%, #555 0%, #444 20%, #333 40%, #222 65%, #111 100%);
+            background: radial-gradient(ellipse 120% 100% at 50% 50%, #222 0%, #1a1a1a 25%, #141414 50%, #111 75%, #0e0e0e 100%);
         }
 
         .apple-image-container {
@@ -218,8 +218,10 @@
             left: 50%;
             opacity: 0;
             pointer-events: none;
-            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
             transition: transform 0.55s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.55s cubic-bezier(0.25, 0.1, 0.25, 1);
+            mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 60%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 60%, transparent 100%);
         }
 
         /* Positions */
