@@ -424,8 +424,8 @@ export default function Home() {
               Ligereza. Resistencia. Sin concesiones.
             </p>
             <div className="price-row">
-              <span className="price">151&eur;</span>
-              <span className="old-price">189&eur;</span>
+              <span className="price">151€</span>
+              <span className="old-price">189€</span>
               <span className="shipping">Envio incluido</span>
             </div>
             <a href="#comprar" className="btn-hero">
@@ -651,8 +651,8 @@ export default function Home() {
           </div>
           <h2>¿Listo para volar?</h2>
           <div className="cta-price-row">
-            <span className="big">151&eur;</span>
-            <span className="old">189&eur;</span>
+            <span className="big">151€</span>
+            <span className="old">189€</span>
             <span className="badge">-20%</span>
           </div>
           <p className="cta-note">
