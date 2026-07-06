@@ -187,7 +187,7 @@
            HERO — SPLIT SLIDE (2 images at once)
            ============================================ */
         .apple-hero {
-            height: 500vh;
+            height: 350vh;
             position: relative;
         }
 
@@ -1392,11 +1392,12 @@
 
             // Animate old out
             old.classList.add('exit-' + dir);
-            // Animate new in — position based on index parity
+            // Animate new in — 0=c, 1=l, 2=r, 3=l
+            const posClass = to === 0 ? 'pos-c' : (to % 2 === 1 ? 'pos-l' : 'pos-r');
             nw.classList.add('enter-' + dir);
             void nw.offsetWidth;
             nw.classList.remove('enter-' + dir);
-            nw.classList.add(to % 2 === 0 ? 'pos-l' : 'pos-r');
+            nw.classList.add(posClass);
 
             ad[from].classList.remove('active');
             ad[to].classList.add('active');
@@ -1422,9 +1423,7 @@
 
                 const scrollable = heroHeight - vh;
                 const progress = (scrollTop - heroTop) / scrollable;
-                // Smooth: map 0→1 into 0→3 with fractional part for sub-frame
-                const rawFrame = progress * 3;
-                const fi = Math.min(Math.floor(rawFrame), 3);
+                const fi = Math.min(Math.floor(progress * 4), 3);
                 if (fi !== heroCurF) heroGo(heroCurF, fi);
             } else if (scrollTop < heroTop) {
                 appleInner.style.position = 'relative';
