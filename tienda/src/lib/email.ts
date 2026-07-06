@@ -40,11 +40,11 @@ export async function sendOrderConfirmation({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${publicKey}`,
       },
       body: JSON.stringify({
         service_id: serviceId,
         template_id: templateId,
+        user_id: publicKey,
         template_params: templateParams,
       }),
     })
