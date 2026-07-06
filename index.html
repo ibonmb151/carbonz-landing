@@ -34,6 +34,7 @@
             background: #111;
             scroll-behavior: smooth;
             overscroll-behavior: none;
+            border-radius: 0;
         }
 
         body {
@@ -937,34 +938,34 @@
         .stock-alert {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.7rem;
+            gap: 10px;
+            font-size: 0.72rem;
             font-weight: 500;
-            color: var(--green);
-            letter-spacing: 0.04em;
-            margin-bottom: 20px;
-            padding: 6px 14px;
-            background: rgba(48,209,88,0.08);
-            border: 1px solid rgba(48,209,88,0.15);
-            border-radius: 980px;
+            color: var(--gray-400);
+            letter-spacing: 0.02em;
+            margin-bottom: 24px;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+
+        .stock-alert .stock-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+            flex-shrink: 0;
         }
 
         .stock-alert strong {
-            color: #fff;
+            color: var(--green);
             font-weight: 700;
         }
 
         .stock-alert em {
             font-style: normal;
-            color: var(--gray-500);
-        }
-
-        .stock-dot {
-            width: 5px;
-            height: 5px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
+            color: var(--gray-600);
         }
 
         .cta-price-row {
@@ -1082,13 +1083,13 @@
             border-top: 1px solid rgba(255,255,255,0.06);
             padding: 24px 48px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
+            gap: 32px;
             position: relative;
             z-index: 2;
             background: #111;
+            border-radius: 0;
         }
 
         footer .copy {
