@@ -444,7 +444,7 @@
            TEXT REVEAL
            ============================================ */
         .text-reveal-section {
-            padding: 140px 24px;
+            padding: 80px 24px;
             display: flex;
             justify-content: center;
             position: relative;
@@ -500,7 +500,7 @@
            ============================================ */
         .sticky-section {
             position: relative;
-            height: 120vh;
+            height: 100vh;
             z-index: 2;
             background: #111;
         }
@@ -604,7 +604,7 @@
         .split-asym {
             display: grid;
             grid-template-columns: 55% 45%;
-            min-height: 90vh;
+            min-height: 80vh;
             position: relative;
             z-index: 2;
             background: #111;
@@ -648,6 +648,7 @@
             min-height: 70vh;
             display: flex;
             align-items: center;
+            background: #111;
         }
 
         .diagonal-bg {
@@ -694,7 +695,7 @@
            ============================================ */
         .hscroll-section {
             overflow: hidden;
-            padding: 100px 0 100px 48px;
+            padding: 60px 0 60px 48px;
             position: relative;
             z-index: 2;
             background: #111;
@@ -1375,7 +1376,7 @@
         let heroCurF = 0;
         let heroBusy = false;
 
-        function heroReset(f, i) {
+        function heroReset(f) {
             f.className = 'apple-frame';
         }
 
@@ -1387,15 +1388,15 @@
             const dir = to > from ? 'r' : 'l';
 
             // Clear all frames
-            af.forEach((f,i) => heroReset(f, i));
+            af.forEach(f => heroReset(f));
 
             // Animate old out
             old.classList.add('exit-' + dir);
-            // Animate new in
+            // Animate new in — position based on index parity
             nw.classList.add('enter-' + dir);
-            void nw.offsetWidth; // force reflow
+            void nw.offsetWidth;
             nw.classList.remove('enter-' + dir);
-            nw.classList.add('pos-' + (to % 2 === 0 ? 'l' : 'r'));
+            nw.classList.add(to % 2 === 0 ? 'pos-l' : 'pos-r');
 
             ad[from].classList.remove('active');
             ad[to].classList.add('active');
@@ -1421,7 +1422,9 @@
 
                 const scrollable = heroHeight - vh;
                 const progress = (scrollTop - heroTop) / scrollable;
-                const fi = Math.min(Math.floor(progress * 4), 3);
+                // Smooth: map 0→1 into 0→3 with fractional part for sub-frame
+                const rawFrame = progress * 3;
+                const fi = Math.min(Math.floor(rawFrame), 3);
                 if (fi !== heroCurF) heroGo(heroCurF, fi);
             } else if (scrollTop < heroTop) {
                 appleInner.style.position = 'relative';
