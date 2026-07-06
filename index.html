@@ -1384,8 +1384,8 @@
         let heroCurF = 0;
         let heroBusy = false;
 
-        function heroReset(f) {
-            f.className = 'apple-frame';
+        function heroReset(f, i) {
+            f.className = 'apple-frame' + (i === 0 ? ' frame-first' : '');
         }
 
         function heroGo(from, to) {
@@ -1395,12 +1395,12 @@
             const nw = af[to];
             const dir = to > from ? 'r' : 'l';
 
-            // Clear all frames
-            af.forEach(f => heroReset(f));
+            // Clear all frames (preserve frame-first on 0)
+            af.forEach((f, i) => heroReset(f, i));
 
             // Animate old out
             old.classList.add('exit-' + dir);
-            // Animate new in — 0=c, 1=l, 2=r, 3=l
+            // Animate new in
             const posClass = to === 0 ? 'pos-c' : (to % 2 === 1 ? 'pos-l' : 'pos-r');
             nw.classList.add('enter-' + dir);
             void nw.offsetWidth;
@@ -1412,7 +1412,7 @@
             appleLabel.textContent = labels[to];
             heroCurF = to;
 
-            setTimeout(() => { heroBusy = false; }, 600);
+            setTimeout(() => { heroBusy = false; }, 550);
         }
 
         function updateAppleHero() {
@@ -1438,7 +1438,7 @@
                 appleInner.style.top = 'auto';
                 appleInner.style.zIndex = '1';
                 if (heroCurF !== 0) {
-                    af.forEach((f,i) => { f.className = 'apple-frame' + (i === 0 ? ' frame-first pos-c' : ''); });
+                    af.forEach((f, i) => { f.className = 'apple-frame' + (i === 0 ? ' frame-first pos-c' : ''); });
                     heroCurF = 0;
                     ad.forEach((d,i) => { d.className = 'apple-dot' + (i === 0 ? ' active' : ''); });
                     appleLabel.textContent = labels[0];
@@ -1497,6 +1497,20 @@
                 document.body.style.overflow = '';
             });
         });
+
+        // Hscroll — prevent horizontal scroll from blocking vertical
+        const htrack = document.querySelector('.hscroll-track');
+        if (htrack) {
+            htrack.addEventListener('wheel', (e) => {
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                    const atStart = htrack.scrollLeft <= 0;
+                    const atEnd = htrack.scrollLeft + htrack.clientWidth >= htrack.scrollWidth - 2;
+                    if ((e.deltaX < 0 && atStart) || (e.deltaX > 0 && atEnd)) {
+                        e.preventDefault();
+                    }
+                }
+            }, { passive: false });
+        }
 
         // Smooth anchor
         document.querySelectorAll('a[href^="#"]').forEach(a => {
