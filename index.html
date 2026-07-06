@@ -208,11 +208,11 @@
             inset: 0;
         }
 
-        /* Frames — square-ish, big, with split-slide */
+        /* Frames — split-slide */
         .apple-frame {
             position: absolute;
-            width: 88%;
-            max-width: none;
+            width: 52%;
+            max-width: 540px;
             height: auto;
             top: 50%;
             left: 50%;
@@ -222,6 +222,13 @@
             transition: transform 0.55s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.55s cubic-bezier(0.25, 0.1, 0.25, 1);
             mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 60%, transparent 100%);
             -webkit-mask-image: radial-gradient(ellipse 90% 85% at 50% 50%, black 60%, transparent 100%);
+        }
+
+        /* First image ENORMOUS */
+        .apple-frame.frame-first {
+            width: 88%;
+            max-width: none;
+            transform: translate(-50%, -50%) scale(0.92);
         }
 
         /* Positions */
@@ -694,7 +701,7 @@
            HORIZONTAL SCROLL
            ============================================ */
         .hscroll-section {
-            overflow: hidden;
+            overflow: visible;
             padding: 60px 0 60px 48px;
             position: relative;
             z-index: 2;
@@ -716,6 +723,7 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
             padding-bottom: 24px;
             padding-right: 48px;
             scrollbar-width: none;
@@ -1119,7 +1127,7 @@
             <div class="apple-bg"></div>
 
             <div class="apple-image-container">
-                <img src="hero-frontal.png" alt="Cúpula carbono frontal" class="apple-frame pos-c" id="af-0">
+                <img src="hero-frontal.png" alt="Cúpula carbono frontal" class="apple-frame frame-first pos-c" id="af-0">
                 <img src="diagonal.png" alt="Cúpula carbono diagonal" class="apple-frame" id="af-1">
                 <img src="lateral2.png" alt="Cúpula carbono lateral" class="apple-frame" id="af-2">
                 <img src="trasera.png" alt="Cúpula carbono trasera" class="apple-frame" id="af-3">
@@ -1430,7 +1438,7 @@
                 appleInner.style.top = 'auto';
                 appleInner.style.zIndex = '1';
                 if (heroCurF !== 0) {
-                    af.forEach((f,i) => { f.className = 'apple-frame' + (i === 0 ? ' pos-c' : ''); });
+                    af.forEach((f,i) => { f.className = 'apple-frame' + (i === 0 ? ' frame-first pos-c' : ''); });
                     heroCurF = 0;
                     ad.forEach((d,i) => { d.className = 'apple-dot' + (i === 0 ? ' active' : ''); });
                     appleLabel.textContent = labels[0];
