@@ -218,8 +218,15 @@
             width: 92%;
             max-width: 960px;
             height: auto;
-            transition: opacity 0.35s ease;
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             filter: drop-shadow(0 40px 80px rgba(0,0,0,0.7)) drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+        }
+
+        .apple-frame.active {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .apple-dots {
@@ -1099,10 +1106,10 @@
             <div class="apple-bg"></div>
 
             <div class="apple-image-container">
-                <img src="hero-frontal.png" alt="Cúpula carbono frontal" class="apple-frame" id="af-0" style="opacity:1;">
-                <img src="diagonal.png" alt="Cúpula carbono diagonal" class="apple-frame" id="af-1" style="opacity:0;">
-                <img src="lateral2.png" alt="Cúpula carbono lateral" class="apple-frame" id="af-2" style="opacity:0;">
-                <img src="trasera.png" alt="Cúpula carbono trasera" class="apple-frame" id="af-3" style="opacity:0;">
+                <img src="hero-frontal.png" alt="Cúpula carbono frontal" class="apple-frame active" id="af-0">
+                <img src="diagonal.png" alt="Cúpula carbono diagonal" class="apple-frame" id="af-1">
+                <img src="lateral2.png" alt="Cúpula carbono lateral" class="apple-frame" id="af-2">
+                <img src="trasera.png" alt="Cúpula carbono trasera" class="apple-frame" id="af-3">
             </div>
 
             <div class="apple-dots">
@@ -1374,7 +1381,7 @@
                 const fi = Math.min(Math.floor(progress * 4), 3);
 
                 for (let i = 0; i < 4; i++) {
-                    af[i].style.opacity = (i === fi) ? '1' : '0';
+                    af[i].classList.toggle('active', i === fi);
                     ad[i].className = 'apple-dot' + (i === fi ? ' active' : '');
                 }
                 appleLabel.textContent = labels[fi];
@@ -1382,8 +1389,8 @@
                 appleInner.style.position = 'relative';
                 appleInner.style.top = 'auto';
                 appleInner.style.zIndex = '1';
-                af[0].style.opacity = '1';
-                for (let i = 1; i < 4; i++) af[i].style.opacity = '0';
+                af[0].classList.add('active');
+                for (let i = 1; i < 4; i++) af[i].classList.remove('active');
             } else {
                 // Below hero — keep it fixed as background, content scrolls over it
                 appleInner.style.position = 'fixed';
