@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-// import { prisma } from '@/lib/prisma' // Uncomment when DB is connected
+import { createOrder } from '@/lib/db'
 import { sendOrderConfirmation } from '@/lib/email'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
@@ -78,43 +78,21 @@ export async function POST(req: NextRequest) {
 
       console.log('Order data:', JSON.stringify(orderData, null, 2))
 
-      // ─── Prisma: Save to database (uncomment when DB is connected) ───
-      /*
-      // Create or find user by email
-      const user = await prisma.user.upsert({
-        where: { email: customerEmail! },
-        update: { name: customerName },
-        create: {
-          email: customerEmail!,
-          name: customerName,
-        },
+      // ─── Save to SQLite database ───
+      createOrder({
+        id: `ord_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        stripeSessionId: session.id,
+        customerName: customerName || 'Cliente',
+        customerEmail: customerEmail || '',
+        customerAddress: orderData.shipping?.address || '',
+        customerCity: orderData.shipping?.city || '',
+        customerPostal: orderData.shipping?.zip || '',
+        customerCountry: orderData.shipping?.country || 'ES',
+        items: orderData.items,
+        total: totalAmount || 0,
+        status: 'pending',
       })
-
-      // Create order with status "paid"
-      const order = await prisma.order.create({
-        data: {
-          userId: user.id,
-          status: 'paid',
-          total: totalAmount!,
-          shippingName: orderData.shipping?.name || customerName || '',
-          shippingEmail: customerEmail || '',
-          shippingAddress: orderData.shipping?.address || '',
-          shippingCity: orderData.shipping?.city || '',
-          shippingZip: orderData.shipping?.zip || '',
-          shippingCountry: orderData.shipping?.country || 'ES',
-          stripeSessionId: session.id,
-          items: {
-            create: orderData.items.map((item) => ({
-              productId: 'product-id-here', // Map from Stripe product ID
-              quantity: item.quantity,
-              price: item.price,
-            })),
-          },
-        },
-      })
-
-      console.log('Order created:', order.id)
-      */
+      console.log('Order saved to DB for session:', session.id)
 
       // ─── Send confirmation email ───
       if (customerEmail) {
@@ -139,20 +117,13 @@ export async function POST(req: NextRequest) {
     console.log('Payment failed:', session.id)
 
     try {
-      // ─── Prisma: Update order status to "failed" (uncomment when DB is connected) ───
-      /*
-      const order = await prisma.order.findUnique({
-        where: { stripeSessionId: session.id },
-      })
-
+      // Update order status in DB
+      const { getOrderBySessionId, updateOrderStatus } = await import('@/lib/db')
+      const order = getOrderBySessionId(session.id)
       if (order) {
-        await prisma.order.update({
-          where: { id: order.id },
-          data: { status: 'failed' },
-        })
+        updateOrderStatus(order.id, 'failed')
         console.log('Order marked as failed:', order.id)
       }
-      */
     } catch (error) {
       console.error('Error updating failed order:', error)
     }
