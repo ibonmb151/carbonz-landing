@@ -78,8 +78,8 @@ export async function POST(req: NextRequest) {
 
       console.log('Order data:', JSON.stringify(orderData, null, 2))
 
-      // ─── Save to SQLite database ───
-      createOrder({
+      // ─── Save to Supabase database ───
+      await createOrder({
         id: `ord_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
         stripeSessionId: session.id,
         customerName: customerName || 'Cliente',
@@ -119,9 +119,9 @@ export async function POST(req: NextRequest) {
     try {
       // Update order status in DB
       const { getOrderBySessionId, updateOrderStatus } = await import('@/lib/db')
-      const order = getOrderBySessionId(session.id)
+      const order = await getOrderBySessionId(session.id)
       if (order) {
-        updateOrderStatus(order.id, 'failed')
+        await updateOrderStatus(order.id, 'failed')
         console.log('Order marked as failed:', order.id)
       }
     } catch (error) {

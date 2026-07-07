@@ -13,13 +13,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const order = getOrder(orderId)
+    const order = await getOrder(orderId)
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
     // Update order in DB
-    updateOrderTracking(orderId, trackingNumber)
+    await updateOrderTracking(orderId, trackingNumber)
 
     // Send tracking email
     if (order.customer_email) {

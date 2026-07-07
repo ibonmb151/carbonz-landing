@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
-        const admin = verifyAdmin(credentials.email, credentials.password)
+        const admin = await verifyAdmin(credentials.email, credentials.password)
         if (!admin) return null
 
         return {

@@ -3,8 +3,8 @@ import { getOrderStats, getAllOrders } from '@/lib/db'
 
 export async function GET() {
   try {
-    const stats = getOrderStats()
-    const recentOrders = getAllOrders().slice(0, 10)
+    const stats = await getOrderStats()
+    const recentOrders = (await getAllOrders()).slice(0, 10)
 
     return NextResponse.json({
       stats,

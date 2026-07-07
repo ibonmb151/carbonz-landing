@@ -7,14 +7,14 @@ export async function GET(req: NextRequest) {
     const id = url.searchParams.get('id')
 
     if (id) {
-      const order = getOrder(id)
+      const order = await getOrder(id)
       if (!order) {
         return NextResponse.json({ error: 'Order not found' }, { status: 404 })
       }
       return NextResponse.json(order)
     }
 
-    const orders = getAllOrders()
+    const orders = await getAllOrders()
     return NextResponse.json(orders)
   } catch (error) {
     console.error('Error fetching orders:', error)
@@ -32,14 +32,14 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (status) {
-      updateOrderStatus(id, status)
+      await updateOrderStatus(id, status)
     }
 
     if (trackingNumber) {
-      updateOrderTracking(id, trackingNumber)
+      await updateOrderTracking(id, trackingNumber)
     }
 
-    const order = getOrder(id)
+    const order = await getOrder(id)
     return NextResponse.json(order)
   } catch (error) {
     console.error('Error updating order:', error)
