@@ -98,7 +98,7 @@ export async function sendOrderConfirmation({
   try {
     await sgMail.send({
       to: email,
-      from: 'CarbonZ <carbon.vercel.app@gmail.com>',
+      from: 'CarbonZ <carbonz.vercel.app@gmail.com>',
       subject: `Pedido ${shortOrderId} confirmado ✓`,
       html,
     })
