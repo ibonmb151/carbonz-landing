@@ -14,12 +14,20 @@ async function ExitoContent({
       style={{
         minHeight: '100vh',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         background: '#111',
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
+      {/* Nav pill */}
+      <nav className="nav-pill visible" style={{ position: 'fixed', top: 10 }}>
+        <a href="/#producto">Producto</a>
+        <a href="/#detalles">Detalles</a>
+        <a href="/blog" className="pill-cta">Blog</a>
+        <a href="/#comprar" className="pill-cta">Visitar tienda</a>
+      </nav>
       <div style={{ textAlign: 'center', padding: '40px 20px', maxWidth: 440 }}>
         {/* Animated checkmark */}
         <div
