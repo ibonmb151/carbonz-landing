@@ -15,24 +15,16 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            Carbon<span className="text-[#30d158]">Z</span>
-          </Link>
-          <div className="flex items-center gap-8">
-            <Link href="/blog" className="text-sm font-medium text-white">
-              Blog
-            </Link>
-            <Link
-              href="/#comprar"
-              className="text-sm font-medium bg-white text-black px-5 py-2 rounded-full hover:bg-gray-200 transition-colors"
-            >
-              Visitar tienda
-            </Link>
-          </div>
-        </div>
+      {/* Nav pill — same style as landing */}
+      <nav className="nav-pill visible">
+        <Link href="/#producto">Producto</Link>
+        <Link href="/#detalles">Detalles</Link>
+        <Link href="/blog" className="pill-cta">
+          Blog
+        </Link>
+        <Link href="/#comprar" className="pill-cta">
+          Visitar tienda
+        </Link>
       </nav>
 
       {/* Hero */}
