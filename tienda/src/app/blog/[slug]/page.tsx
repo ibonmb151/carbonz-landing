@@ -6,6 +6,85 @@ import { markdownToHtml } from '@/lib/markdown'
 
 type Params = Promise<{ slug: string }>
 
+const categoryStyles: Record<
+  string,
+  {
+    icon: string
+    accent: string
+    accentBg: string
+    accentBorder: string
+    radialGradient: string
+  }
+> = {
+  Material: {
+    icon: '🔬',
+    accent: '#3b82f6',
+    accentBg: 'rgba(59,130,246,0.10)',
+    accentBorder: 'rgba(59,130,246,0.25)',
+    radialGradient: 'radial-gradient(circle at 70% 0%, rgba(59,130,246,0.08), transparent 50%)',
+  },
+  Comparativa: {
+    icon: '📊',
+    accent: '#a855f7',
+    accentBg: 'rgba(168,85,247,0.10)',
+    accentBorder: 'rgba(168,85,247,0.25)',
+    radialGradient: 'radial-gradient(circle at 30% 0%, rgba(168,85,247,0.08), transparent 50%)',
+  },
+  Guía: {
+    icon: '🔧',
+    accent: '#f97316',
+    accentBg: 'rgba(249,115,22,0.10)',
+    accentBorder: 'rgba(249,115,22,0.25)',
+    radialGradient: 'radial-gradient(circle at 60% 0%, rgba(249,115,22,0.08), transparent 50%)',
+  },
+  Ranking: {
+    icon: '🏆',
+    accent: '#f59e0b',
+    accentBg: 'rgba(245,158,11,0.10)',
+    accentBorder: 'rgba(245,158,11,0.25)',
+    radialGradient: 'radial-gradient(circle at 50% 0%, rgba(245,158,11,0.08), transparent 50%)',
+  },
+  Análisis: {
+    icon: '📈',
+    accent: '#06b6d4',
+    accentBg: 'rgba(6,182,212,0.10)',
+    accentBorder: 'rgba(6,182,212,0.25)',
+    radialGradient: 'radial-gradient(circle at 40% 0%, rgba(6,182,212,0.08), transparent 50%)',
+  },
+  Estilo: {
+    icon: '🏍️',
+    accent: '#ec4899',
+    accentBg: 'rgba(236,72,153,0.10)',
+    accentBorder: 'rgba(236,72,153,0.25)',
+    radialGradient: 'radial-gradient(circle at 55% 0%, rgba(236,72,153,0.08), transparent 50%)',
+  },
+  Mantenimiento: {
+    icon: '🛡️',
+    accent: '#14b8a6',
+    accentBg: 'rgba(20,184,166,0.10)',
+    accentBorder: 'rgba(20,184,166,0.25)',
+    radialGradient: 'radial-gradient(circle at 45% 0%, rgba(20,184,166,0.08), transparent 50%)',
+  },
+  Proceso: {
+    icon: '⚡',
+    accent: '#6366f1',
+    accentBg: 'rgba(99,102,241,0.10)',
+    accentBorder: 'rgba(99,102,241,0.25)',
+    radialGradient: 'radial-gradient(circle at 65% 0%, rgba(99,102,241,0.08), transparent 50%)',
+  },
+  default: {
+    icon: '◆',
+    accent: '#30d158',
+    accentBg: 'rgba(48,209,88,0.10)',
+    accentBorder: 'rgba(48,209,88,0.25)',
+    radialGradient: 'radial-gradient(circle at 50% 0%, rgba(48,209,88,0.06), transparent 50%)',
+  },
+}
+
+function getCatStyle(category: string) {
+  return categoryStyles[category] || categoryStyles.default
+}
+
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }))
 }
@@ -42,6 +121,7 @@ export default async function BlogArticlePage({
   if (!post) notFound()
 
   const htmlContent = markdownToHtml(post.content)
+  const cs = getCatStyle(post.category)
 
   return (
     <main
@@ -99,16 +179,16 @@ export default async function BlogArticlePage({
           <span
             style={{
               display: 'inline-block',
-              background: 'rgba(48,209,88,0.1)',
-              color: 'var(--green)',
+              background: cs.accentBg,
+              color: cs.accent,
               fontSize: '0.7rem',
               fontWeight: 600,
               padding: '5px 14px',
               borderRadius: 980,
-              border: '1px solid rgba(48,209,88,0.2)',
+              border: `1px solid ${cs.accentBorder}`,
             }}
           >
-            {post.category}
+            {cs.icon} {post.category}
           </span>
         </div>
 
@@ -148,8 +228,7 @@ export default async function BlogArticlePage({
         <div
           style={{
             height: 1,
-            background:
-              'linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent)',
+            background: `linear-gradient(to right, transparent, ${cs.accentBorder}, transparent)`,
           }}
         />
       </section>
@@ -184,18 +263,30 @@ export default async function BlogArticlePage({
         <div
           style={{
             background: '#1a1a1a',
-            border: '1px solid rgba(255,255,255,0.05)',
+            border: '1px solid rgba(48,209,88,0.12)',
             borderRadius: 24,
             padding: '56px 48px',
             textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'radial-gradient(circle at 50% 0%, rgba(48,209,88,0.06), transparent 60%)',
+              pointerEvents: 'none',
+            }}
+          />
           <h2
             style={{
               fontSize: 'clamp(1.5rem, 3vw, 2rem)',
               fontWeight: 800,
               marginBottom: 16,
               letterSpacing: '-0.03em',
+              position: 'relative',
             }}
           >
             ¿Listo para equipar tu Z900?
@@ -208,6 +299,7 @@ export default async function BlogArticlePage({
               maxWidth: 440,
               margin: '0 auto 32px',
               lineHeight: 1.7,
+              position: 'relative',
             }}
           >
             Nuestras cúpulas de carbono forjado están diseñadas específicamente
@@ -219,13 +311,14 @@ export default async function BlogArticlePage({
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              background: 'var(--white)',
+              background: 'var(--green)',
               color: 'var(--black)',
               fontSize: '0.85rem',
               fontWeight: 600,
               padding: '14px 36px',
               borderRadius: 980,
               transition: 'background 0.2s',
+              position: 'relative',
             }}
           >
             Visitar tienda
@@ -263,54 +356,70 @@ export default async function BlogArticlePage({
           {blogPosts
             .filter((p) => p.slug !== post.slug)
             .slice(0, 4)
-            .map((related) => (
-              <Link
-                key={related.slug}
-                href={`/blog/${related.slug}`}
-                style={{
-                  display: 'block',
-                  background: '#1a1a1a',
-                  border: '1px solid rgba(255,255,255,0.05)',
-                  borderRadius: 16,
-                  padding: 24,
-                  transition: 'border-color 0.3s',
-                }}
-              >
-                <span
+            .map((related) => {
+              const rcs = getCatStyle(related.category)
+              return (
+                <Link
+                  key={related.slug}
+                  href={`/blog/${related.slug}`}
                   style={{
-                    fontSize: '0.65rem',
-                    color: 'var(--green)',
-                    fontWeight: 600,
-                  }}
-                >
-                  {related.category}
-                </span>
-                <h4
-                  style={{
-                    fontSize: '0.9rem',
-                    fontWeight: 700,
-                    marginTop: 10,
-                    marginBottom: 8,
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {related.title}
-                </h4>
-                <p
-                  style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--gray-600)',
-                    lineHeight: 1.5,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
+                    display: 'block',
+                    background: '#1a1a1a',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: 16,
+                    padding: 24,
+                    transition: 'border-color 0.3s',
+                    position: 'relative',
                     overflow: 'hidden',
                   }}
                 >
-                  {related.excerpt}
-                </p>
-              </Link>
-            ))}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 2,
+                      background: `linear-gradient(to right, ${rcs.accent}, transparent)`,
+                      opacity: 0.5,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: '0.65rem',
+                      color: rcs.accent,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {rcs.icon} {related.category}
+                  </span>
+                  <h4
+                    style={{
+                      fontSize: '0.9rem',
+                      fontWeight: 700,
+                      marginTop: 10,
+                      marginBottom: 8,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {related.title}
+                  </h4>
+                  <p
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--gray-600)',
+                      lineHeight: 1.5,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {related.excerpt}
+                  </p>
+                </Link>
+              )
+            })}
         </div>
       </section>
 

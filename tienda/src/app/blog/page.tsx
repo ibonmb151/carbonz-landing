@@ -8,10 +8,111 @@ export const metadata: Metadata = {
     'Artículos sobre carbono forjado, guías de instalación, comparativas y todo lo que necesitas saber sobre cúpulas de carbono para Kawasaki Z900.',
 }
 
+const categoryStyles: Record<
+  string,
+  {
+    gradient: string
+    radialGradient: string
+    icon: string
+    accent: string
+    accentBg: string
+    accentBorder: string
+  }
+> = {
+  Material: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(59,130,246,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 70% 30%, rgba(59,130,246,0.10), transparent 55%)',
+    icon: '🔬',
+    accent: '#3b82f6',
+    accentBg: 'rgba(59,130,246,0.10)',
+    accentBorder: 'rgba(59,130,246,0.25)',
+  },
+  Comparativa: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(168,85,247,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 30% 60%, rgba(168,85,247,0.10), transparent 55%)',
+    icon: '📊',
+    accent: '#a855f7',
+    accentBg: 'rgba(168,85,247,0.10)',
+    accentBorder: 'rgba(168,85,247,0.25)',
+  },
+  Guía: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(249,115,22,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 60% 40%, rgba(249,115,22,0.10), transparent 55%)',
+    icon: '🔧',
+    accent: '#f97316',
+    accentBg: 'rgba(249,115,22,0.10)',
+    accentBorder: 'rgba(249,115,22,0.25)',
+  },
+  Ranking: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(245,158,11,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 50% 50%, rgba(245,158,11,0.10), transparent 55%)',
+    icon: '🏆',
+    accent: '#f59e0b',
+    accentBg: 'rgba(245,158,11,0.10)',
+    accentBorder: 'rgba(245,158,11,0.25)',
+  },
+  Análisis: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(6,182,212,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 40% 70%, rgba(6,182,212,0.10), transparent 55%)',
+    icon: '📈',
+    accent: '#06b6d4',
+    accentBg: 'rgba(6,182,212,0.10)',
+    accentBorder: 'rgba(6,182,212,0.25)',
+  },
+  Estilo: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(236,72,153,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 55% 35%, rgba(236,72,153,0.10), transparent 55%)',
+    icon: '🏍️',
+    accent: '#ec4899',
+    accentBg: 'rgba(236,72,153,0.10)',
+    accentBorder: 'rgba(236,72,153,0.25)',
+  },
+  Mantenimiento: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(20,184,166,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 45% 55%, rgba(20,184,166,0.10), transparent 55%)',
+    icon: '🛡️',
+    accent: '#14b8a6',
+    accentBg: 'rgba(20,184,166,0.10)',
+    accentBorder: 'rgba(20,184,166,0.25)',
+  },
+  Proceso: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(99,102,241,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 65% 45%, rgba(99,102,241,0.10), transparent 55%)',
+    icon: '⚡',
+    accent: '#6366f1',
+    accentBg: 'rgba(99,102,241,0.10)',
+    accentBorder: 'rgba(99,102,241,0.25)',
+  },
+  default: {
+    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(48,209,88,0.08) 100%)',
+    radialGradient:
+      'radial-gradient(circle at 50% 50%, rgba(48,209,88,0.08), transparent 55%)',
+    icon: '◆',
+    accent: '#30d158',
+    accentBg: 'rgba(48,209,88,0.10)',
+    accentBorder: 'rgba(48,209,88,0.25)',
+  },
+}
+
+function getCatStyle(category: string) {
+  return categoryStyles[category] || categoryStyles.default
+}
+
 export default function BlogPage() {
   const sorted = [...blogPosts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   )
+
+  const featured = sorted[0]
+  const featuredStyle = getCatStyle(featured.category)
 
   return (
     <main
@@ -91,11 +192,11 @@ export default function BlogPage() {
         }}
       >
         <Link
-          href={`/blog/${sorted[0].slug}`}
+          href={`/blog/${featured.slug}`}
           style={{
             display: 'block',
             background: '#1a1a1a',
-            border: '1px solid rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.06)',
             borderRadius: 24,
             overflow: 'hidden',
             transition: 'border-color 0.3s',
@@ -111,8 +212,7 @@ export default function BlogPage() {
             {/* Image */}
             <div
               style={{
-                background:
-                  'linear-gradient(135deg, #1a1a1a 0%, #111 50%, #0a0a0a 100%)',
+                background: featuredStyle.gradient,
                 position: 'relative',
                 overflow: 'hidden',
               }}
@@ -121,10 +221,10 @@ export default function BlogPage() {
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background:
-                    'radial-gradient(circle at 30% 50%, rgba(48,209,88,0.06), transparent 60%)',
+                  background: featuredStyle.radialGradient,
                 }}
               />
+              {/* Geometric pattern unique per category */}
               <div
                 style={{
                   position: 'absolute',
@@ -134,17 +234,50 @@ export default function BlogPage() {
                   justifyContent: 'center',
                 }}
               >
+                <div
+                  style={{
+                    width: 200,
+                    height: 200,
+                    border: `1px solid ${featuredStyle.accentBorder}`,
+                    borderRadius: 40,
+                    transform: 'rotate(15deg)',
+                    position: 'absolute',
+                  }}
+                />
+                <div
+                  style={{
+                    width: 140,
+                    height: 140,
+                    border: `1px solid ${featuredStyle.accentBorder}`,
+                    borderRadius: 32,
+                    transform: 'rotate(-10deg)',
+                    position: 'absolute',
+                    opacity: 0.6,
+                  }}
+                />
                 <span
                   style={{
-                    fontSize: 140,
-                    fontWeight: 900,
-                    color: 'rgba(255,255,255,0.015)',
-                    userSelect: 'none',
+                    fontSize: 56,
+                    position: 'relative',
+                    zIndex: 1,
+                    filter: 'grayscale(0.3)',
                   }}
                 >
-                  CZ
+                  {featuredStyle.icon}
                 </span>
               </div>
+              {/* Decorative line accent */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 3,
+                  background: `linear-gradient(to right, transparent, ${featuredStyle.accent}, transparent)`,
+                  opacity: 0.5,
+                }}
+              />
               <div
                 style={{
                   position: 'absolute',
@@ -155,13 +288,13 @@ export default function BlogPage() {
                 <span
                   style={{
                     display: 'inline-block',
-                    background: 'rgba(48,209,88,0.1)',
-                    color: 'var(--green)',
+                    background: featuredStyle.accentBg,
+                    color: featuredStyle.accent,
                     fontSize: '0.7rem',
                     fontWeight: 600,
                     padding: '6px 14px',
                     borderRadius: 980,
-                    border: '1px solid rgba(48,209,88,0.2)',
+                    border: `1px solid ${featuredStyle.accentBorder}`,
                   }}
                 >
                   Destacado
@@ -181,18 +314,18 @@ export default function BlogPage() {
               <span
                 style={{
                   display: 'inline-block',
-                  background: 'rgba(48,209,88,0.1)',
-                  color: 'var(--green)',
+                  background: featuredStyle.accentBg,
+                  color: featuredStyle.accent,
                   fontSize: '0.7rem',
                   fontWeight: 600,
                   padding: '5px 12px',
                   borderRadius: 980,
-                  border: '1px solid rgba(48,209,88,0.2)',
+                  border: `1px solid ${featuredStyle.accentBorder}`,
                   width: 'fit-content',
                   marginBottom: 24,
                 }}
               >
-                {sorted[0].category}
+                {featuredStyle.icon} {featured.category}
               </span>
               <h2
                 style={{
@@ -203,7 +336,7 @@ export default function BlogPage() {
                   lineHeight: 1.2,
                 }}
               >
-                {sorted[0].title}
+                {featured.title}
               </h2>
               <p
                 style={{
@@ -213,7 +346,7 @@ export default function BlogPage() {
                   marginBottom: 28,
                 }}
               >
-                {sorted[0].excerpt}
+                {featured.excerpt}
               </p>
               <div
                 style={{
@@ -224,15 +357,15 @@ export default function BlogPage() {
                   color: 'var(--gray-600)',
                 }}
               >
-                <time dateTime={sorted[0].date}>
-                  {new Date(sorted[0].date).toLocaleDateString('es-ES', {
+                <time dateTime={featured.date}>
+                  {new Date(featured.date).toLocaleDateString('es-ES', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
                   })}
                 </time>
                 <span>·</span>
-                <span>{sorted[0].readTime} de lectura</span>
+                <span>{featured.readTime} de lectura</span>
               </div>
             </div>
           </div>
@@ -254,81 +387,115 @@ export default function BlogPage() {
             gap: 32,
           }}
         >
-          {sorted.slice(1).map((post) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                background: '#1a1a1a',
-                border: '1px solid rgba(255,255,255,0.05)',
-                borderRadius: 20,
-                overflow: 'hidden',
-                transition: 'border-color 0.3s, transform 0.3s',
-              }}
-            >
-              {/* Image */}
-              <div
+          {sorted.slice(1).map((post) => {
+            const cs = getCatStyle(post.category)
+            return (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
                 style={{
-                  height: 200,
-                  background:
-                    'linear-gradient(135deg, #1a1a1a 0%, #111 50%, #0a0a0a 100%)',
-                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  background: '#1a1a1a',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  borderRadius: 20,
                   overflow: 'hidden',
+                  transition: 'border-color 0.3s, transform 0.3s',
                 }}
               >
+                {/* Image */}
                 <div
                   style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background:
-                      'radial-gradient(circle at 50% 50%, rgba(48,209,88,0.04), transparent 60%)',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    height: 200,
+                    background: cs.gradient,
+                    position: 'relative',
+                    overflow: 'hidden',
                   }}
                 >
-                  <span
+                  <div
                     style={{
-                      fontSize: 64,
-                      fontWeight: 900,
-                      color: 'rgba(255,255,255,0.02)',
-                      userSelect: 'none',
+                      position: 'absolute',
+                      inset: 0,
+                      background: cs.radialGradient,
+                    }}
+                  />
+                  {/* Geometric shapes */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
-                    CZ
-                  </span>
-                </div>
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 20,
-                    left: 20,
-                  }}
-                >
-                  <span
+                    <div
+                      style={{
+                        width: 100,
+                        height: 100,
+                        border: `1px solid ${cs.accentBorder}`,
+                        borderRadius: 24,
+                        transform: 'rotate(20deg)',
+                        position: 'absolute',
+                      }}
+                    />
+                    <div
+                      style={{
+                        width: 60,
+                        height: 60,
+                        border: `1px solid ${cs.accentBorder}`,
+                        borderRadius: 16,
+                        transform: 'rotate(-15deg)',
+                        position: 'absolute',
+                        opacity: 0.5,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: 36,
+                        position: 'relative',
+                        zIndex: 1,
+                        filter: 'grayscale(0.3)',
+                      }}
+                    >
+                      {cs.icon}
+                    </span>
+                  </div>
+                  {/* Bottom accent line */}
+                  <div
                     style={{
-                      display: 'inline-block',
-                      background: 'rgba(48,209,88,0.1)',
-                      color: 'var(--green)',
-                      fontSize: '0.65rem',
-                      fontWeight: 600,
-                      padding: '5px 12px',
-                      borderRadius: 980,
-                      border: '1px solid rgba(48,209,88,0.2)',
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: 2,
+                      background: `linear-gradient(to right, transparent, ${cs.accent}, transparent)`,
+                      opacity: 0.4,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 20,
+                      left: 20,
                     }}
                   >
-                    {post.category}
-                  </span>
+                    <span
+                      style={{
+                        display: 'inline-block',
+                        background: cs.accentBg,
+                        color: cs.accent,
+                        fontSize: '0.65rem',
+                        fontWeight: 600,
+                        padding: '5px 12px',
+                        borderRadius: 980,
+                        border: `1px solid ${cs.accentBorder}`,
+                      }}
+                    >
+                      {cs.icon} {post.category}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
               {/* Content */}
               <div style={{ padding: 28, flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -408,7 +575,8 @@ export default function BlogPage() {
                 </div>
               </div>
             </Link>
-          ))}
+          )
+          })}
         </div>
       </section>
 
@@ -423,18 +591,30 @@ export default function BlogPage() {
         <div
           style={{
             background: '#1a1a1a',
-            border: '1px solid rgba(255,255,255,0.05)',
+            border: '1px solid rgba(48,209,88,0.12)',
             borderRadius: 24,
             padding: '64px 48px',
             textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'radial-gradient(circle at 50% 0%, rgba(48,209,88,0.06), transparent 60%)',
+              pointerEvents: 'none',
+            }}
+          />
           <h2
             style={{
               fontSize: 'clamp(1.8rem, 3vw, 2.5rem)',
               fontWeight: 800,
               marginBottom: 20,
               letterSpacing: '-0.03em',
+              position: 'relative',
             }}
           >
             ¿Listo para equipar tu Z900?
@@ -447,6 +627,7 @@ export default function BlogPage() {
               maxWidth: 480,
               margin: '0 auto 36px',
               lineHeight: 1.7,
+              position: 'relative',
             }}
           >
             Nuestras cúpulas de carbono forjado están diseñadas específicamente
@@ -458,13 +639,14 @@ export default function BlogPage() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              background: 'var(--white)',
+              background: 'var(--green)',
               color: 'var(--black)',
               fontSize: '0.85rem',
               fontWeight: 600,
               padding: '14px 36px',
               borderRadius: 980,
               transition: 'background 0.2s',
+              position: 'relative',
             }}
           >
             Visitar tienda
