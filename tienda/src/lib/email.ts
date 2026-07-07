@@ -23,8 +23,6 @@ export async function sendOrderConfirmation({
   total,
   items,
 }: OrderConfirmationEmail) {
-  const shortOrderId = orderId.slice(0, 8)
-
   const itemList = items
     .map(
       (i) => `
@@ -48,26 +46,22 @@ export async function sendOrderConfirmation({
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased">
 
-  <!-- Wrapper -->
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:40px 20px">
     <tr>
       <td align="center">
 
-        <!-- Card -->
         <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#111111;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.06)">
 
           <!-- Header -->
           <tr>
             <td style="padding:40px 40px 32px;text-align:center">
-              <!-- Logo -->
               <div style="margin-bottom:24px">
                 <span style="font-size:28px;font-weight:800;color:#f5f5f7;letter-spacing:-0.03em">
                   Carbon<span style="color:#30d158">Z</span>
                 </span>
               </div>
-              <!-- Success icon -->
-              <div style="width:72px;height:72px;border-radius:50%;background:rgba(48,209,88,0.1);display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(48,209,88,0.1);display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#30d158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
               </div>
@@ -87,8 +81,8 @@ export async function sendOrderConfirmation({
                 <div style="font-size:11px;color:#636366;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;font-weight:600">
                   N.º de pedido
                 </div>
-                <div style="font-size:14px;color:#f5f5f7;font-family:'SF Mono',Monaco,Consolas,monospace;font-weight:600;letter-spacing:0.02em">
-                  ${shortOrderId}
+                <div style="font-size:11px;color:#f5f5f7;font-family:'SF Mono',Monaco,Consolas,monospace;font-weight:600;letter-spacing:0.02em;word-break:break-all;line-height:1.6">
+                  ${orderId}
                 </div>
               </div>
             </td>
@@ -144,9 +138,8 @@ export async function sendOrderConfirmation({
           <tr>
             <td style="padding:0 40px 32px">
               <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px">
-                <div style="display:flex;align-items:center;margin-bottom:8px">
-                  <span style="font-size:18px;margin-right:10px">📦</span>
-                  <span style="font-size:14px;color:#f5f5f7;font-weight:600">Envío</span>
+                <div style="margin-bottom:8px">
+                  <span style="font-size:14px;color:#f5f5f7;font-weight:600">📦 Envío</span>
                 </div>
                 <p style="margin:0;font-size:13px;color:#8e8e93;line-height:1.6">
                   Envío gratis a toda Europa.<br>
@@ -172,7 +165,7 @@ export async function sendOrderConfirmation({
           <tr>
             <td style="padding:24px 0;text-align:center">
               <p style="margin:0;font-size:12px;color:#48484a;line-height:1.6">
-                © ${new Date().getFullYear()} CarbonZ · Cúpulas de carbono forjado para Kawasaki Z900
+                © ${new Date().getFullYear()} CarbonZ · Forged Carbon Cupulas
               </p>
             </td>
           </tr>
@@ -189,7 +182,7 @@ export async function sendOrderConfirmation({
     await transporter.sendMail({
       from: '"CarbonZ" <carbonz.vercel.app@gmail.com>',
       to: email,
-      subject: `Pedido ${shortOrderId} confirmado ✓`,
+      subject: `Pedido confirmado ✓`,
       html,
     })
     console.log('Confirmation email sent to:', email)
