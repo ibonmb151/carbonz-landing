@@ -3,13 +3,13 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { blogPosts, getBlogPost, getAllSlugs } from '@/lib/blog-data'
 import { markdownToHtml } from '@/lib/markdown'
+import ScrollProgress from '@/components/ScrollProgress'
 
 type Params = Promise<{ slug: string }>
 
 const categoryStyles: Record<
   string,
   {
-    icon: string
     accent: string
     accentBg: string
     accentBorder: string
@@ -17,63 +17,54 @@ const categoryStyles: Record<
   }
 > = {
   Material: {
-    icon: '🔬',
     accent: '#3b82f6',
     accentBg: 'rgba(59,130,246,0.10)',
     accentBorder: 'rgba(59,130,246,0.25)',
     radialGradient: 'radial-gradient(circle at 70% 0%, rgba(59,130,246,0.08), transparent 50%)',
   },
   Comparativa: {
-    icon: '📊',
     accent: '#a855f7',
     accentBg: 'rgba(168,85,247,0.10)',
     accentBorder: 'rgba(168,85,247,0.25)',
     radialGradient: 'radial-gradient(circle at 30% 0%, rgba(168,85,247,0.08), transparent 50%)',
   },
   Guía: {
-    icon: '🔧',
     accent: '#f97316',
     accentBg: 'rgba(249,115,22,0.10)',
     accentBorder: 'rgba(249,115,22,0.25)',
     radialGradient: 'radial-gradient(circle at 60% 0%, rgba(249,115,22,0.08), transparent 50%)',
   },
   Ranking: {
-    icon: '🏆',
     accent: '#f59e0b',
     accentBg: 'rgba(245,158,11,0.10)',
     accentBorder: 'rgba(245,158,11,0.25)',
     radialGradient: 'radial-gradient(circle at 50% 0%, rgba(245,158,11,0.08), transparent 50%)',
   },
   Análisis: {
-    icon: '📈',
     accent: '#06b6d4',
     accentBg: 'rgba(6,182,212,0.10)',
     accentBorder: 'rgba(6,182,212,0.25)',
     radialGradient: 'radial-gradient(circle at 40% 0%, rgba(6,182,212,0.08), transparent 50%)',
   },
   Estilo: {
-    icon: '🏍️',
     accent: '#ec4899',
     accentBg: 'rgba(236,72,153,0.10)',
     accentBorder: 'rgba(236,72,153,0.25)',
     radialGradient: 'radial-gradient(circle at 55% 0%, rgba(236,72,153,0.08), transparent 50%)',
   },
   Mantenimiento: {
-    icon: '🛡️',
     accent: '#14b8a6',
     accentBg: 'rgba(20,184,166,0.10)',
     accentBorder: 'rgba(20,184,166,0.25)',
     radialGradient: 'radial-gradient(circle at 45% 0%, rgba(20,184,166,0.08), transparent 50%)',
   },
   Proceso: {
-    icon: '⚡',
     accent: '#6366f1',
     accentBg: 'rgba(99,102,241,0.10)',
     accentBorder: 'rgba(99,102,241,0.25)',
     radialGradient: 'radial-gradient(circle at 65% 0%, rgba(99,102,241,0.08), transparent 50%)',
   },
   default: {
-    icon: '◆',
     accent: '#30d158',
     accentBg: 'rgba(48,209,88,0.10)',
     accentBorder: 'rgba(48,209,88,0.25)',
@@ -132,6 +123,8 @@ export default async function BlogArticlePage({
         fontFamily: 'var(--font)',
       }}
     >
+      <ScrollProgress />
+
       {/* Nav pill */}
       <nav className="nav-pill visible">
         <Link href="/#producto">Producto</Link>
@@ -147,7 +140,7 @@ export default async function BlogArticlePage({
       {/* Article header */}
       <section
         style={{
-          padding: '140px 48px 48px',
+          padding: '180px 48px 48px',
           maxWidth: 740,
           margin: '0 auto',
         }}
@@ -188,7 +181,7 @@ export default async function BlogArticlePage({
               border: `1px solid ${cs.accentBorder}`,
             }}
           >
-            {cs.icon} {post.category}
+            {post.category}
           </span>
         </div>
 
@@ -391,7 +384,7 @@ export default async function BlogArticlePage({
                       fontWeight: 600,
                     }}
                   >
-                    {rcs.icon} {related.category}
+                    {related.category}
                   </span>
                   <h4
                     style={{

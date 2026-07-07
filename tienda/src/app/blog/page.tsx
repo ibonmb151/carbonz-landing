@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { blogPosts } from '@/lib/blog-data'
+import ScrollProgress from '@/components/ScrollProgress'
 
 export const metadata: Metadata = {
   title: 'Blog — CarbonZ | Cúpulas de Carbono Forjado para Z900',
@@ -11,99 +12,249 @@ export const metadata: Metadata = {
 const categoryStyles: Record<
   string,
   {
-    gradient: string
-    radialGradient: string
-    icon: string
     accent: string
     accentBg: string
     accentBorder: string
+    treatment: number
   }
 > = {
   Material: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(59,130,246,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 70% 30%, rgba(59,130,246,0.10), transparent 55%)',
-    icon: '🔬',
     accent: '#3b82f6',
     accentBg: 'rgba(59,130,246,0.10)',
     accentBorder: 'rgba(59,130,246,0.25)',
+    treatment: 0,
   },
   Comparativa: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(168,85,247,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 30% 60%, rgba(168,85,247,0.10), transparent 55%)',
-    icon: '📊',
     accent: '#a855f7',
     accentBg: 'rgba(168,85,247,0.10)',
     accentBorder: 'rgba(168,85,247,0.25)',
+    treatment: 1,
   },
   Guía: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(249,115,22,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 60% 40%, rgba(249,115,22,0.10), transparent 55%)',
-    icon: '🔧',
     accent: '#f97316',
     accentBg: 'rgba(249,115,22,0.10)',
     accentBorder: 'rgba(249,115,22,0.25)',
+    treatment: 2,
   },
   Ranking: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(245,158,11,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 50% 50%, rgba(245,158,11,0.10), transparent 55%)',
-    icon: '🏆',
     accent: '#f59e0b',
     accentBg: 'rgba(245,158,11,0.10)',
     accentBorder: 'rgba(245,158,11,0.25)',
+    treatment: 3,
   },
   Análisis: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(6,182,212,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 40% 70%, rgba(6,182,212,0.10), transparent 55%)',
-    icon: '📈',
     accent: '#06b6d4',
     accentBg: 'rgba(6,182,212,0.10)',
     accentBorder: 'rgba(6,182,212,0.25)',
+    treatment: 0,
   },
   Estilo: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(236,72,153,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 55% 35%, rgba(236,72,153,0.10), transparent 55%)',
-    icon: '🏍️',
     accent: '#ec4899',
     accentBg: 'rgba(236,72,153,0.10)',
     accentBorder: 'rgba(236,72,153,0.25)',
+    treatment: 1,
   },
   Mantenimiento: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(20,184,166,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 45% 55%, rgba(20,184,166,0.10), transparent 55%)',
-    icon: '🛡️',
     accent: '#14b8a6',
     accentBg: 'rgba(20,184,166,0.10)',
     accentBorder: 'rgba(20,184,166,0.25)',
+    treatment: 2,
   },
   Proceso: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(99,102,241,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 65% 45%, rgba(99,102,241,0.10), transparent 55%)',
-    icon: '⚡',
     accent: '#6366f1',
     accentBg: 'rgba(99,102,241,0.10)',
     accentBorder: 'rgba(99,102,241,0.25)',
+    treatment: 3,
   },
   default: {
-    gradient: 'linear-gradient(135deg, #1a1a1a 0%, #111 40%, rgba(48,209,88,0.08) 100%)',
-    radialGradient:
-      'radial-gradient(circle at 50% 50%, rgba(48,209,88,0.08), transparent 55%)',
-    icon: '◆',
     accent: '#30d158',
     accentBg: 'rgba(48,209,88,0.10)',
     accentBorder: 'rgba(48,209,88,0.25)',
+    treatment: 0,
   },
 }
 
 function getCatStyle(category: string) {
   return categoryStyles[category] || categoryStyles.default
+}
+
+/* ── Visual treatment renderers ── */
+
+function TreatmentA({ color }: { color: string }) {
+  // Carbon fiber weave pattern
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: `repeating-linear-gradient(45deg, ${color}08 0px, ${color}08 1px, transparent 1px, transparent 8px), repeating-linear-gradient(-45deg, ${color}08 0px, ${color}08 1px, transparent 1px, transparent 8px)`,
+      }}
+    />
+  )
+}
+
+function TreatmentB({ color }: { color: string }) {
+  // Abstract geometry — diagonal SVG lines
+  return (
+    <svg
+      viewBox="0 0 400 250"
+      fill="none"
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+    >
+      <line
+        x1="-20"
+        y1="280"
+        x2="200"
+        y2="-30"
+        stroke={color}
+        strokeWidth="1"
+        opacity="0.12"
+      />
+      <line
+        x1="60"
+        y1="310"
+        x2="300"
+        y2="-20"
+        stroke={color}
+        strokeWidth="1"
+        opacity="0.08"
+      />
+      <line
+        x1="150"
+        y1="290"
+        x2="420"
+        y2="-10"
+        stroke={color}
+        strokeWidth="1"
+        opacity="0.10"
+      />
+      <line
+        x1="-40"
+        y1="180"
+        x2="180"
+        y2="20"
+        stroke={color}
+        strokeWidth="0.5"
+        opacity="0.15"
+      />
+    </svg>
+  )
+}
+
+function TreatmentC({ color }: { color: string }) {
+  // Unique conic/radial gradient
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        background: `conic-gradient(from 135deg at 50% 50%, transparent 0deg, ${color}0a 90deg, transparent 180deg, ${color}06 270deg, transparent 360deg)`,
+      }}
+    />
+  )
+}
+
+function TreatmentD({ color }: { color: string }) {
+  // Z900 silhouette — simplified naked bike SVG
+  return (
+    <svg
+      viewBox="0 0 400 250"
+      fill="none"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <g
+        transform="translate(100, 70) scale(0.5)"
+        stroke={color}
+        strokeWidth="1.5"
+        opacity="0.05"
+        fill="none"
+      >
+        {/* Front wheel */}
+        <circle cx="40" cy="170" r="45" />
+        {/* Rear wheel */}
+        <circle cx="260" cy="170" r="45" />
+        {/* Frame */}
+        <path d="M40 170 L120 80 L200 60 L260 170" />
+        <path d="M120 80 L200 60 L220 130 L160 170" />
+        <path d="M160 170 L120 80" />
+        {/* Tank */}
+        <path d="M140 70 L190 55 L210 70 L180 85 Z" />
+        {/* Seat */}
+        <path d="M190 55 L250 55 L260 80 L210 70 Z" />
+        {/* Handlebar */}
+        <path d="M130 60 L110 40 L100 35" />
+        <path d="M130 60 L140 40 L150 35" />
+        {/* Exhaust */}
+        <path d="M220 130 L280 120 L300 130" />
+        {/* Front fork */}
+        <path d="M40 170 L120 80" strokeWidth="2" />
+      </g>
+    </svg>
+  )
+}
+
+function getTreatment(treatment: number, color: string) {
+  switch (treatment) {
+    case 0:
+      return <TreatmentA color={color} />
+    case 1:
+      return <TreatmentB color={color} />
+    case 2:
+      return <TreatmentC color={color} />
+    case 3:
+      return <TreatmentD color={color} />
+    default:
+      return <TreatmentA color={color} />
+  }
+}
+
+/* ── Featured card treatment (larger weave + more color) ── */
+
+function FeaturedWeave({ color }: { color: string }) {
+  return (
+    <>
+      {/* Base gradient */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: `radial-gradient(circle at 70% 30%, ${color}12, transparent 55%)`,
+        }}
+      />
+      {/* Large weave pattern */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `repeating-linear-gradient(45deg, ${color}0c 0px, ${color}0c 1.5px, transparent 1.5px, transparent 12px), repeating-linear-gradient(-45deg, ${color}0c 0px, ${color}0c 1.5px, transparent 1.5px, transparent 12px)`,
+        }}
+      />
+      {/* Secondary weave layer for depth */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `repeating-linear-gradient(45deg, ${color}06 0px, ${color}06 1px, transparent 1px, transparent 6px), repeating-linear-gradient(-45deg, ${color}06 0px, ${color}06 1px, transparent 1px, transparent 6px)`,
+        }}
+      />
+      {/* Radial highlight */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: `radial-gradient(ellipse 60% 50% at 30% 60%, ${color}08, transparent 70%)`,
+        }}
+      />
+    </>
+  )
 }
 
 export default function BlogPage() {
@@ -123,6 +274,8 @@ export default function BlogPage() {
         fontFamily: 'var(--font)',
       }}
     >
+      <ScrollProgress />
+
       {/* Nav pill */}
       <nav className="nav-pill visible">
         <Link href="/#producto">Producto</Link>
@@ -135,10 +288,10 @@ export default function BlogPage() {
         </Link>
       </nav>
 
-      {/* Hero */}
+      {/* Hero — taller, more spacious */}
       <section
         style={{
-          padding: '160px 48px 80px',
+          padding: '220px 48px 100px',
           maxWidth: 1100,
           margin: '0 auto',
         }}
@@ -150,7 +303,7 @@ export default function BlogPage() {
             color: 'var(--green)',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
-            marginBottom: 24,
+            marginBottom: 28,
           }}
         >
           Blog
@@ -161,7 +314,7 @@ export default function BlogPage() {
             fontWeight: 800,
             letterSpacing: '-0.04em',
             lineHeight: 1.05,
-            marginBottom: 28,
+            marginBottom: 32,
           }}
         >
           Guías, comparativas
@@ -183,7 +336,7 @@ export default function BlogPage() {
         </p>
       </section>
 
-      {/* Featured article */}
+      {/* Featured article — larger weave, more color */}
       <section
         style={{
           maxWidth: 1100,
@@ -209,63 +362,15 @@ export default function BlogPage() {
               minHeight: 380,
             }}
           >
-            {/* Image */}
+            {/* Image — featured weave */}
             <div
               style={{
-                background: featuredStyle.gradient,
+                background: '#1a1a1a',
                 position: 'relative',
                 overflow: 'hidden',
               }}
             >
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: featuredStyle.radialGradient,
-                }}
-              />
-              {/* Geometric pattern unique per category */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    width: 200,
-                    height: 200,
-                    border: `1px solid ${featuredStyle.accentBorder}`,
-                    borderRadius: 40,
-                    transform: 'rotate(15deg)',
-                    position: 'absolute',
-                  }}
-                />
-                <div
-                  style={{
-                    width: 140,
-                    height: 140,
-                    border: `1px solid ${featuredStyle.accentBorder}`,
-                    borderRadius: 32,
-                    transform: 'rotate(-10deg)',
-                    position: 'absolute',
-                    opacity: 0.6,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 56,
-                    position: 'relative',
-                    zIndex: 1,
-                    filter: 'grayscale(0.3)',
-                  }}
-                >
-                  {featuredStyle.icon}
-                </span>
-              </div>
+              <FeaturedWeave color={featuredStyle.accent} />
               {/* Decorative line accent */}
               <div
                 style={{
@@ -325,7 +430,7 @@ export default function BlogPage() {
                   marginBottom: 24,
                 }}
               >
-                {featuredStyle.icon} {featured.category}
+                {featured.category}
               </span>
               <h2
                 style={{
@@ -387,7 +492,7 @@ export default function BlogPage() {
             gap: 32,
           }}
         >
-          {sorted.slice(1).map((post) => {
+          {sorted.slice(1).map((post, idx) => {
             const cs = getCatStyle(post.category)
             return (
               <Link
@@ -403,64 +508,16 @@ export default function BlogPage() {
                   transition: 'border-color 0.3s, transform 0.3s',
                 }}
               >
-                {/* Image */}
+                {/* Image — visual treatment */}
                 <div
                   style={{
                     height: 200,
-                    background: cs.gradient,
+                    background: '#1a1a1a',
                     position: 'relative',
                     overflow: 'hidden',
                   }}
                 >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: cs.radialGradient,
-                    }}
-                  />
-                  {/* Geometric shapes */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 100,
-                        height: 100,
-                        border: `1px solid ${cs.accentBorder}`,
-                        borderRadius: 24,
-                        transform: 'rotate(20deg)',
-                        position: 'absolute',
-                      }}
-                    />
-                    <div
-                      style={{
-                        width: 60,
-                        height: 60,
-                        border: `1px solid ${cs.accentBorder}`,
-                        borderRadius: 16,
-                        transform: 'rotate(-15deg)',
-                        position: 'absolute',
-                        opacity: 0.5,
-                      }}
-                    />
-                    <span
-                      style={{
-                        fontSize: 36,
-                        position: 'relative',
-                        zIndex: 1,
-                        filter: 'grayscale(0.3)',
-                      }}
-                    >
-                      {cs.icon}
-                    </span>
-                  </div>
+                  {getTreatment(cs.treatment, cs.accent)}
                   {/* Bottom accent line */}
                   <div
                     style={{
@@ -492,90 +549,90 @@ export default function BlogPage() {
                         border: `1px solid ${cs.accentBorder}`,
                       }}
                     >
-                      {cs.icon} {post.category}
+                      {post.category}
                     </span>
                   </div>
                 </div>
 
-              {/* Content */}
-              <div style={{ padding: 28, flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    fontSize: '0.7rem',
-                    color: 'var(--gray-600)',
-                    marginBottom: 14,
-                  }}
-                >
-                  <time dateTime={post.date}>
-                    {new Date(post.date).toLocaleDateString('es-ES', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </time>
-                  <span>·</span>
-                  <span>{post.readTime} de lectura</span>
-                </div>
-
-                <h2
-                  style={{
-                    fontSize: '1.15rem',
-                    fontWeight: 700,
-                    color: 'var(--white)',
-                    marginBottom: 12,
-                    lineHeight: 1.35,
-                  }}
-                >
-                  {post.title}
-                </h2>
-
-                <p
-                  style={{
-                    fontSize: '0.85rem',
-                    color: 'var(--gray-500)',
-                    lineHeight: 1.6,
-                    marginBottom: 20,
-                    flex: 1,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {post.excerpt}
-                </p>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    fontSize: '0.8rem',
-                    fontWeight: 500,
-                    color: 'var(--gray-600)',
-                  }}
-                >
-                  Leer artículo
-                  <svg
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    style={{ width: 12, height: 12 }}
+                {/* Content */}
+                <div style={{ padding: 28, flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 10,
+                      fontSize: '0.7rem',
+                      color: 'var(--gray-600)',
+                      marginBottom: 14,
+                    }}
                   >
-                    <path
-                      d="M1 7h12M8 2l5 5-5 5"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                    <time dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
+                    <span>·</span>
+                    <span>{post.readTime} de lectura</span>
+                  </div>
+
+                  <h2
+                    style={{
+                      fontSize: '1.15rem',
+                      fontWeight: 700,
+                      color: 'var(--white)',
+                      marginBottom: 12,
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    {post.title}
+                  </h2>
+
+                  <p
+                    style={{
+                      fontSize: '0.85rem',
+                      color: 'var(--gray-500)',
+                      lineHeight: 1.6,
+                      marginBottom: 20,
+                      flex: 1,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {post.excerpt}
+                  </p>
+
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      fontSize: '0.8rem',
+                      fontWeight: 500,
+                      color: 'var(--gray-600)',
+                    }}
+                  >
+                    Leer artículo
+                    <svg
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      style={{ width: 12, height: 12 }}
+                    >
+                      <path
+                        d="M1 7h12M8 2l5 5-5 5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          )
+              </Link>
+            )
           })}
         </div>
       </section>

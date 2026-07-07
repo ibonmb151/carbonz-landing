@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-06-24.dahlia',
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 interface CheckoutItem {
   name: string
@@ -46,7 +44,6 @@ export async function POST(req: NextRequest) {
           'GB', 'IE', 'CH', 'PL',
         ],
       },
-      automatic_tax: { enabled: true },
     })
 
     return NextResponse.json({ url: session.url })
