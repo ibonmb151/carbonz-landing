@@ -9,74 +9,7 @@ export const metadata: Metadata = {
     'Artículos sobre carbono forjado, guías de instalación, comparativas y todo lo que necesitas saber sobre cúpulas de carbono para Kawasaki Z900.',
 }
 
-const categoryStyles: Record<
-  string,
-  {
-    accent: string
-    accentBg: string
-    accentBorder: string
-    treatment: number
-  }
-> = {
-  Material: {
-    accent: '#3b82f6',
-    accentBg: 'rgba(59,130,246,0.10)',
-    accentBorder: 'rgba(59,130,246,0.25)',
-    treatment: 0,
-  },
-  Comparativa: {
-    accent: '#a855f7',
-    accentBg: 'rgba(168,85,247,0.10)',
-    accentBorder: 'rgba(168,85,247,0.25)',
-    treatment: 1,
-  },
-  Guía: {
-    accent: '#f97316',
-    accentBg: 'rgba(249,115,22,0.10)',
-    accentBorder: 'rgba(249,115,22,0.25)',
-    treatment: 2,
-  },
-  Ranking: {
-    accent: '#f59e0b',
-    accentBg: 'rgba(245,158,11,0.10)',
-    accentBorder: 'rgba(245,158,11,0.25)',
-    treatment: 3,
-  },
-  Análisis: {
-    accent: '#06b6d4',
-    accentBg: 'rgba(6,182,212,0.10)',
-    accentBorder: 'rgba(6,182,212,0.25)',
-    treatment: 0,
-  },
-  Estilo: {
-    accent: '#ec4899',
-    accentBg: 'rgba(236,72,153,0.10)',
-    accentBorder: 'rgba(236,72,153,0.25)',
-    treatment: 1,
-  },
-  Mantenimiento: {
-    accent: '#14b8a6',
-    accentBg: 'rgba(20,184,166,0.10)',
-    accentBorder: 'rgba(20,184,166,0.25)',
-    treatment: 2,
-  },
-  Proceso: {
-    accent: '#6366f1',
-    accentBg: 'rgba(99,102,241,0.10)',
-    accentBorder: 'rgba(99,102,241,0.25)',
-    treatment: 3,
-  },
-  default: {
-    accent: '#30d158',
-    accentBg: 'rgba(48,209,88,0.10)',
-    accentBorder: 'rgba(48,209,88,0.25)',
-    treatment: 0,
-  },
-}
-
-function getCatStyle(category: string) {
-  return categoryStyles[category] || categoryStyles.default
-}
+const ACCENT = '#30d158'
 
 /* ── Visual treatment renderers ── */
 
@@ -263,7 +196,6 @@ export default function BlogPage() {
   )
 
   const featured = sorted[0]
-  const featuredStyle = getCatStyle(featured.category)
 
   return (
     <main
@@ -370,7 +302,7 @@ export default function BlogPage() {
                 overflow: 'hidden',
               }}
             >
-              <FeaturedWeave color={featuredStyle.accent} />
+              <FeaturedWeave color={ACCENT} />
               {/* Decorative line accent */}
               <div
                 style={{
@@ -379,7 +311,7 @@ export default function BlogPage() {
                   left: 0,
                   right: 0,
                   height: 3,
-                  background: `linear-gradient(to right, transparent, ${featuredStyle.accent}, transparent)`,
+                  background: `linear-gradient(to right, transparent, ${ACCENT}, transparent)`,
                   opacity: 0.5,
                 }}
               />
@@ -392,14 +324,11 @@ export default function BlogPage() {
               >
                 <span
                   style={{
-                    display: 'inline-block',
-                    background: featuredStyle.accentBg,
-                    color: featuredStyle.accent,
                     fontSize: '0.7rem',
                     fontWeight: 600,
-                    padding: '6px 14px',
-                    borderRadius: 980,
-                    border: `1px solid ${featuredStyle.accentBorder}`,
+                    color: ACCENT,
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
                   }}
                 >
                   Destacado
@@ -418,14 +347,11 @@ export default function BlogPage() {
             >
               <span
                 style={{
-                  display: 'inline-block',
-                  background: featuredStyle.accentBg,
-                  color: featuredStyle.accent,
                   fontSize: '0.7rem',
-                  fontWeight: 600,
-                  padding: '5px 12px',
-                  borderRadius: 980,
-                  border: `1px solid ${featuredStyle.accentBorder}`,
+                  fontWeight: 500,
+                  color: 'var(--gray-500)',
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
                   width: 'fit-content',
                   marginBottom: 24,
                 }}
@@ -493,7 +419,7 @@ export default function BlogPage() {
           }}
         >
           {sorted.slice(1).map((post, idx) => {
-            const cs = getCatStyle(post.category)
+            const treatmentIdx = idx % 4
             return (
               <Link
                 key={post.slug}
@@ -517,7 +443,7 @@ export default function BlogPage() {
                     overflow: 'hidden',
                   }}
                 >
-                  {getTreatment(cs.treatment, cs.accent)}
+                  {getTreatment(treatmentIdx, ACCENT)}
                   {/* Bottom accent line */}
                   <div
                     style={{
@@ -526,7 +452,7 @@ export default function BlogPage() {
                       left: 0,
                       right: 0,
                       height: 2,
-                      background: `linear-gradient(to right, transparent, ${cs.accent}, transparent)`,
+                      background: `linear-gradient(to right, transparent, ${ACCENT}, transparent)`,
                       opacity: 0.4,
                     }}
                   />
@@ -539,14 +465,11 @@ export default function BlogPage() {
                   >
                     <span
                       style={{
-                        display: 'inline-block',
-                        background: cs.accentBg,
-                        color: cs.accent,
                         fontSize: '0.65rem',
-                        fontWeight: 600,
-                        padding: '5px 12px',
-                        borderRadius: 980,
-                        border: `1px solid ${cs.accentBorder}`,
+                        fontWeight: 500,
+                        color: 'var(--gray-500)',
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase',
                       }}
                     >
                       {post.category}

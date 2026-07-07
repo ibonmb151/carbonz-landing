@@ -7,74 +7,7 @@ import ScrollProgress from '@/components/ScrollProgress'
 
 type Params = Promise<{ slug: string }>
 
-const categoryStyles: Record<
-  string,
-  {
-    accent: string
-    accentBg: string
-    accentBorder: string
-    radialGradient: string
-  }
-> = {
-  Material: {
-    accent: '#3b82f6',
-    accentBg: 'rgba(59,130,246,0.10)',
-    accentBorder: 'rgba(59,130,246,0.25)',
-    radialGradient: 'radial-gradient(circle at 70% 0%, rgba(59,130,246,0.08), transparent 50%)',
-  },
-  Comparativa: {
-    accent: '#a855f7',
-    accentBg: 'rgba(168,85,247,0.10)',
-    accentBorder: 'rgba(168,85,247,0.25)',
-    radialGradient: 'radial-gradient(circle at 30% 0%, rgba(168,85,247,0.08), transparent 50%)',
-  },
-  Guía: {
-    accent: '#f97316',
-    accentBg: 'rgba(249,115,22,0.10)',
-    accentBorder: 'rgba(249,115,22,0.25)',
-    radialGradient: 'radial-gradient(circle at 60% 0%, rgba(249,115,22,0.08), transparent 50%)',
-  },
-  Ranking: {
-    accent: '#f59e0b',
-    accentBg: 'rgba(245,158,11,0.10)',
-    accentBorder: 'rgba(245,158,11,0.25)',
-    radialGradient: 'radial-gradient(circle at 50% 0%, rgba(245,158,11,0.08), transparent 50%)',
-  },
-  Análisis: {
-    accent: '#06b6d4',
-    accentBg: 'rgba(6,182,212,0.10)',
-    accentBorder: 'rgba(6,182,212,0.25)',
-    radialGradient: 'radial-gradient(circle at 40% 0%, rgba(6,182,212,0.08), transparent 50%)',
-  },
-  Estilo: {
-    accent: '#ec4899',
-    accentBg: 'rgba(236,72,153,0.10)',
-    accentBorder: 'rgba(236,72,153,0.25)',
-    radialGradient: 'radial-gradient(circle at 55% 0%, rgba(236,72,153,0.08), transparent 50%)',
-  },
-  Mantenimiento: {
-    accent: '#14b8a6',
-    accentBg: 'rgba(20,184,166,0.10)',
-    accentBorder: 'rgba(20,184,166,0.25)',
-    radialGradient: 'radial-gradient(circle at 45% 0%, rgba(20,184,166,0.08), transparent 50%)',
-  },
-  Proceso: {
-    accent: '#6366f1',
-    accentBg: 'rgba(99,102,241,0.10)',
-    accentBorder: 'rgba(99,102,241,0.25)',
-    radialGradient: 'radial-gradient(circle at 65% 0%, rgba(99,102,241,0.08), transparent 50%)',
-  },
-  default: {
-    accent: '#30d158',
-    accentBg: 'rgba(48,209,88,0.10)',
-    accentBorder: 'rgba(48,209,88,0.25)',
-    radialGradient: 'radial-gradient(circle at 50% 0%, rgba(48,209,88,0.06), transparent 50%)',
-  },
-}
-
-function getCatStyle(category: string) {
-  return categoryStyles[category] || categoryStyles.default
-}
+const ACCENT = '#30d158'
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }))
@@ -112,7 +45,6 @@ export default async function BlogArticlePage({
   if (!post) notFound()
 
   const htmlContent = markdownToHtml(post.content)
-  const cs = getCatStyle(post.category)
 
   return (
     <main
@@ -171,14 +103,11 @@ export default async function BlogArticlePage({
         <div style={{ marginBottom: 20 }}>
           <span
             style={{
-              display: 'inline-block',
-              background: cs.accentBg,
-              color: cs.accent,
               fontSize: '0.7rem',
-              fontWeight: 600,
-              padding: '5px 14px',
-              borderRadius: 980,
-              border: `1px solid ${cs.accentBorder}`,
+              fontWeight: 500,
+              color: 'var(--gray-500)',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
             }}
           >
             {post.category}
@@ -221,7 +150,7 @@ export default async function BlogArticlePage({
         <div
           style={{
             height: 1,
-            background: `linear-gradient(to right, transparent, ${cs.accentBorder}, transparent)`,
+            background: `linear-gradient(to right, transparent, rgba(48,209,88,0.25), transparent)`,
           }}
         />
       </section>
@@ -350,7 +279,6 @@ export default async function BlogArticlePage({
             .filter((p) => p.slug !== post.slug)
             .slice(0, 4)
             .map((related) => {
-              const rcs = getCatStyle(related.category)
               return (
                 <Link
                   key={related.slug}
@@ -373,15 +301,17 @@ export default async function BlogArticlePage({
                       left: 0,
                       right: 0,
                       height: 2,
-                      background: `linear-gradient(to right, ${rcs.accent}, transparent)`,
+                      background: `linear-gradient(to right, ${ACCENT}, transparent)`,
                       opacity: 0.5,
                     }}
                   />
                   <span
                     style={{
                       fontSize: '0.65rem',
-                      color: rcs.accent,
-                      fontWeight: 600,
+                      fontWeight: 500,
+                      color: 'var(--gray-500)',
+                      letterSpacing: '0.05em',
+                      textTransform: 'uppercase',
                     }}
                   >
                     {related.category}
