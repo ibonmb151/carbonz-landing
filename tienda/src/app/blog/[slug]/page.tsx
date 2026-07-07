@@ -64,6 +64,7 @@ export default async function BlogArticlePage({
         <Link href="/blog" className="pill-cta">
           Blog
         </Link>
+        <div style={{ width: 12 }} />
         <Link href="/#comprar" className="pill-cta">
           Visitar tienda
         </Link>
