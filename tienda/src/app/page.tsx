@@ -685,7 +685,7 @@ export default function Home() {
         <span className="copy">&copy; 2026 CarbonZ</span>
         <div className="links">
           <a href="#">Envios</a>
-          <a href="#">Devoluciones</a>
+          <a href="/blog">Blog</a>
           <a href="#">Contacto</a>
           <a href="#">Instagram</a>
         </div>
