@@ -63,6 +63,33 @@ const FEATURES = [
   },
 ]
 
+const FAQS = [
+  {
+    q: '¿Qué es el carbono forjado?',
+    a: 'El carbono forjado es un material compuesto hecho de fibra de carbono cortada y aleatoriamente orientada, comprimido bajo alta presión. A diferencia del carbono tradicional tejido, el forjado ofrece resistencia isotrópica (igual en todas direcciones) y un acabado visual único tipo mármol.',
+  },
+  {
+    q: '¿Es compatible con mi Kawasaki Z900?',
+    a: 'Nuestra cúpula es compatible con todas las versiones de la Kawasaki Z900 desde 2020 hasta 2026, incluyendo la versión SE. Se monta directamente en los puntos de fijación originales sin necesidad de modificaciones.',
+  },
+  {
+    q: '¿Cómo se instala?',
+    a: 'El montaje es Plug & Play. Solo necesitas un destornillador Allen y 15-20 minutos. La cúpula se fija en los mismos puntos que la original. No se requieren perforaciones ni herramientas especiales.',
+  },
+  {
+    q: '¿Cuánto tarda el envío?',
+    a: 'El envío es gratuito a toda Europa. El plazo de entrega es de 3-5 días laborables. Recibirás un email con el número de tracking en cuanto salga.',
+  },
+  {
+    q: '¿Puedo devolver el producto?',
+    a: 'Sí, tienes 14 días para devolver el producto desde que lo recibes, sin necesidad de justificación. El producto debe estar en perfecto estado y con su embalaje original.',
+  },
+  {
+    q: '¿Cuánto pesa la cúpula?',
+    a: 'Nuestra cúpula de carbono forjado pesa aproximadamente 320g, significativamente más ligera que la original de plástico. Esto mejora la relación peso/potencia y la sensación al rodar.',
+  },
+]
+
 function formatPrice(cents: number) {
   return (cents / 100).toFixed(2).replace('.', ',') + '\u20AC'
 }
@@ -101,6 +128,9 @@ export default function Home() {
     onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // ── FAQ accordion ──
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   // ── Mobile menu ──
   const [menuOpen, setMenuOpen] = useState(false)
@@ -674,6 +704,112 @@ export default function Home() {
             >
               Preguntar por WhatsApp
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+           FAQ
+           ═══════════════════════════════════════════ */}
+      <section
+        style={{
+          background: '#111',
+          padding: '100px 24px',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1100,
+            margin: '0 auto',
+          }}
+        >
+          <h2
+            style={{
+              color: '#fff',
+              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontWeight: 700,
+              textAlign: 'center',
+              marginBottom: 60,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Preguntas frecuentes.
+          </h2>
+          <div>
+            {FAQS.map((faq, i) => {
+              const isOpen = openFaq === i
+              return (
+                <div
+                  key={i}
+                  style={{
+                    borderBottom:
+                      i < FAQS.length - 1
+                        ? '1px solid rgba(255,255,255,0.05)'
+                        : 'none',
+                  }}
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                      padding: '24px 0',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: '#fff',
+                        fontSize: '1.125rem',
+                        fontWeight: 600,
+                        fontFamily: 'inherit',
+                        letterSpacing: '-0.01em',
+                      }}
+                    >
+                      {faq.q}
+                    </span>
+                    <span
+                      style={{
+                        flexShrink: 0,
+                        marginLeft: 16,
+                        color: '#8e8e93',
+                        fontSize: '1.25rem',
+                        fontWeight: 300,
+                        transition: 'transform 0.3s ease',
+                        transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+                      }}
+                    >
+                      +
+                    </span>
+                  </button>
+                  <div
+                    style={{
+                      maxHeight: isOpen ? 300 : 0,
+                      overflow: 'hidden',
+                      transition: 'max-height 0.35s ease',
+                    }}
+                  >
+                    <p
+                      style={{
+                        color: '#8e8e93',
+                        fontSize: '1rem',
+                        lineHeight: 1.7,
+                        margin: 0,
+                        paddingBottom: 24,
+                        maxWidth: 800,
+                      }}
+                    >
+                      {faq.a}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
