@@ -820,9 +820,10 @@ export default function Home() {
       <footer className="footer">
         <span className="copy">&copy; 2026 CarbonZ</span>
         <div className="links">
-          <a href="#">Envios</a>
+          <a href="/#comprar">Tienda</a>
           <a href="/blog">Blog</a>
-          <a href="#">Contacto</a>
+          <a href="/politica-privacidad">Politica de Privacidad</a>
+          <a href="/terminos">Terminos</a>
           <a href="#">Instagram</a>
         </div>
       </footer>
