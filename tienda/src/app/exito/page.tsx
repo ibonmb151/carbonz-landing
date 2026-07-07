@@ -115,6 +115,20 @@ async function ExitoContent({
           con los detalles de tu envío.
         </p>
 
+        {/* Spam notice */}
+        <p
+          style={{
+            fontSize: '0.75rem',
+            color: '#636366',
+            maxWidth: 360,
+            margin: '0 auto 16px',
+            lineHeight: 1.5,
+            textAlign: 'center',
+          }}
+        >
+          ¿No lo ves? Revisa tu carpeta de <strong>spam</strong> o <strong>promociones</strong>.
+        </p>
+
         {/* Shipping info */}
         <div
           style={{

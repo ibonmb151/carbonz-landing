@@ -1,12 +1,6 @@
-import nodemailer from 'nodemailer'
+import sgMail from '@sendgrid/mail'
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'carbonz.vercel.app@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-})
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || '')
 
 interface OrderConfirmationEmail {
   email: string
@@ -102,16 +96,16 @@ export async function sendOrderConfirmation({
   `
 
   try {
-    await transporter.sendMail({
-      from: '"CarbonZ" <carbonz.vercel.app@gmail.com>',
+    await sgMail.send({
       to: email,
+      from: 'ibon.mb151@gmail.com',
       subject: `Pedido ${shortOrderId} confirmado ✓`,
       html,
     })
     console.log('Confirmation email sent to:', email)
     return { success: true }
   } catch (error) {
-    console.error('Email error:', error)
+    console.error('SendGrid error:', error)
     return { success: false, error }
   }
 }
