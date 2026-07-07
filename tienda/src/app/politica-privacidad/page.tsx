@@ -58,7 +58,6 @@ No realizamos profiling ni decisiones automatizadas con tus datos.`,
 
 Una vez finalizado el plazo de conservación, los datos serán eliminados de forma segura.`,
   },
-  },
   {
     title: '6. Tus derechos',
     body: `De conformidad con el Reglamento General de Protección de Datos (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD), tienes derecho a:
