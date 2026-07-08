@@ -161,3 +161,186 @@ export async function verifyAdmin(email: string, password: string) {
 
   return data
 }
+
+// ─── Customers (CRM) ────────────────────────────────────
+
+export interface CustomerData {
+  id?: number
+  name: string
+  email: string
+  phone?: string
+  address?: string
+  city?: string
+  postal?: string
+  country?: string
+  notes?: string
+  tags?: string[]
+  total_orders?: number
+  total_spent?: number
+}
+
+export async function getAllCustomers() {
+  const { data, error } = await getSupabase()
+    .from('customers')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching customers:', error)
+    throw error
+  }
+
+  return data || []
+}
+
+export async function getCustomer(id: number) {
+  const { data, error } = await getSupabase()
+    .from('customers')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) {
+    if (error.code === 'PGRST116') return null
+    console.error('Error fetching customer:', error)
+    throw error
+  }
+
+  return data
+}
+
+export async function createCustomer(customer: CustomerData) {
+  const { data, error } = await getSupabase()
+    .from('customers')
+    .insert({
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone || '',
+      address: customer.address || '',
+      city: customer.city || '',
+      postal: customer.postal || '',
+      country: customer.country || 'ES',
+      notes: customer.notes || '',
+      tags: customer.tags || [],
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error creating customer:', error)
+    throw error
+  }
+
+  return data
+}
+
+export async function updateCustomer(id: number, updates: Partial<CustomerData>) {
+  const { data, error } = await getSupabase()
+    .from('customers')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error updating customer:', error)
+    throw error
+  }
+
+  return data
+}
+
+export async function deleteCustomer(id: number) {
+  const { error } = await getSupabase()
+    .from('customers')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Error deleting customer:', error)
+    throw error
+  }
+}
+
+export async function searchCustomers(query: string) {
+  const { data, error } = await getSupabase()
+    .from('customers')
+    .select('*')
+    .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error searching customers:', error)
+    throw error
+  }
+
+  return data || []
+}
+
+export async function getCustomerStats() {
+  const { count: total } = await getSupabase()
+    .from('customers')
+    .select('*', { count: 'exact', head: true })
+
+  const firstOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
+  const { count: thisMonth } = await getSupabase()
+    .from('customers')
+    .select('*', { count: 'exact', head: true })
+    .gte('created_at', firstOfMonth)
+
+  const { data: vip } = await getSupabase()
+    .from('customers')
+    .select('*')
+    .gte('total_orders', 2)
+
+  return {
+    total: total || 0,
+    thisMonth: thisMonth || 0,
+    vip: vip?.length || 0,
+  }
+}
+
+// ─── Communications ──────────────────────────────────────
+
+export interface CommunicationData {
+  id?: number
+  customer_id: number
+  type: string
+  subject?: string
+  content: string
+}
+
+export async function getCustomerCommunications(customerId: number) {
+  const { data, error } = await getSupabase()
+    .from('communications')
+    .select('*')
+    .eq('customer_id', customerId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching communications:', error)
+    throw error
+  }
+
+  return data || []
+}
+
+export async function addCommunication(comm: CommunicationData) {
+  const { data, error } = await getSupabase()
+    .from('communications')
+    .insert({
+      customer_id: comm.customer_id,
+      type: comm.type,
+      subject: comm.subject || '',
+      content: comm.content,
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error adding communication:', error)
+    throw error
+  }
+
+  return data
+}
