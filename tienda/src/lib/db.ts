@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { getSupabase } from './supabase'
 
 // ─── Orders ──────────────────────────────────────────────
 
@@ -18,7 +18,7 @@ export interface OrderData {
 }
 
 export async function createOrder(data: OrderData) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('orders')
     .insert({
       id: data.id,
@@ -41,7 +41,7 @@ export async function createOrder(data: OrderData) {
 }
 
 export async function getAllOrders() {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('orders')
     .select('*')
     .order('created_at', { ascending: false })
@@ -55,7 +55,7 @@ export async function getAllOrders() {
 }
 
 export async function getOrder(id: string) {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('orders')
     .select('*')
     .eq('id', id)
@@ -71,7 +71,7 @@ export async function getOrder(id: string) {
 }
 
 export async function getOrderBySessionId(sessionId: string) {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('orders')
     .select('*')
     .eq('stripe_session_id', sessionId)
@@ -87,7 +87,7 @@ export async function getOrderBySessionId(sessionId: string) {
 }
 
 export async function updateOrderStatus(id: string, status: string) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('orders')
     .update({ status })
     .eq('id', id)
@@ -99,7 +99,7 @@ export async function updateOrderStatus(id: string, status: string) {
 }
 
 export async function updateOrderTracking(id: string, trackingNumber: string) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('orders')
     .update({ tracking_number: trackingNumber, status: 'shipped' })
     .eq('id', id)
@@ -112,7 +112,7 @@ export async function updateOrderTracking(id: string, trackingNumber: string) {
 
 export async function getOrderStats() {
   // Get total orders and total revenue
-  const { data: allOrders, error: err1 } = await supabase
+  const { data: allOrders, error: err1 } = await getSupabase()
     .from('orders')
     .select('total, status, created_at')
 
@@ -146,7 +146,7 @@ export async function getOrderStats() {
 export async function verifyAdmin(email: string, password: string) {
   const hash = Buffer.from(password).toString('base64')
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('admins')
     .select('*')
     .eq('email', email)
