@@ -173,6 +173,9 @@ export interface CustomerData {
   city?: string
   postal?: string
   country?: string
+  company?: string
+  source?: string
+  status?: string
   notes?: string
   tags?: string[]
   total_orders?: number
@@ -220,6 +223,9 @@ export async function createCustomer(customer: CustomerData) {
       city: customer.city || '',
       postal: customer.postal || '',
       country: customer.country || 'ES',
+      company: customer.company || '',
+      source: customer.source || '',
+      status: customer.status || 'lead',
       notes: customer.notes || '',
       tags: customer.tags || [],
     })
@@ -266,7 +272,7 @@ export async function searchCustomers(query: string) {
   const { data, error } = await getSupabase()
     .from('customers')
     .select('*')
-    .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
+    .or(`name.ilike.%${query}%,email.ilike.%${query}%,phone.ilike.%${query}%`)
     .order('created_at', { ascending: false })
 
   if (error) {
